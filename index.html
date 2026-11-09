@@ -15,7 +15,7 @@
 <body class="bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-950 min-h-screen text-slate-100 flex flex-col justify-between p-4 sm:p-6">
 
     <!-- Onboarding Page with Password Protection -->
-    <div id="onboardingScreen" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 transition-opacity duration-300">
+    <div id="onboardingScreen" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4 transition-opacity duration-300">
         <div class="bg-slate-800 border border-slate-700/80 rounded-3xl p-8 max-w-md w-full text-center shadow-2xl space-y-5">
             <div class="w-16 h-16 bg-indigo-500/10 border border-indigo-500/20 rounded-2xl mx-auto flex items-center justify-center text-3xl shadow-inner">
                 🚀
@@ -25,15 +25,15 @@
                 <p class="text-slate-400 text-sm">Please enter the secret password to unlock the application.</p>
             </div>
 
-            <!-- Password Input -->
-            <div class="space-y-2 text-left">
+            <!-- Password Input Form -->
+            <div class="space-y-2 text-left" onsubmit="event.preventDefault();">
                 <label class="block text-xs font-medium text-slate-300 uppercase tracking-wider">Access Password</label>
                 <input type="password" id="inputPassword" placeholder="Enter password..." onkeydown="handlePasswordKey(event)" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition">
                 <p id="errorPasswordMsg" class="text-rose-400 text-xs text-center hidden font-medium">Incorrect password! Please try again.</p>
             </div>
 
-            <button onclick="verifikasiPassword()" class="w-full bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-semibold py-3.5 px-6 rounded-2xl shadow-lg shadow-indigo-600/30 transition duration-200 flex items-center justify-center gap-2 cursor-pointer text-base">
-                <span>🚀</span> Help me, Yuaaaan
+            <button type="button" onclick="verifikasiPassword()" class="w-full bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-semibold py-3.5 px-6 rounded-2xl shadow-lg shadow-indigo-600/30 transition duration-200 flex items-center justify-center gap-2 cursor-pointer text-base">
+                <span>🚀</span> Help me, Yuaaaaan
             </button>
         </div>
     </div>
@@ -89,4 +89,105 @@
         <div class="lg:col-span-2 bg-slate-800/60 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-6 shadow-xl flex flex-col">
             <div class="flex items-center justify-between border-b border-slate-700 pb-3 mb-4">
                 <h2 class="text-lg font-semibold text-white flex items-center gap-2">Data Preview</h2>
-                <span id="rowCountBadge" class="text-xs bg-slate-700 text-slate-300 px-2.5 py-1 rounded-full font-
+                <span id="rowCountBadge" class="text-xs bg-slate-700 text-slate-300 px-2.5 py-1 rounded-full font-medium">0 Rows</span>
+            </div>
+
+            <!-- Preview Table -->
+            <div class="flex-1 border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/50 max-h-80 overflow-y-auto">
+                <table class="w-full text-left border-collapse text-sm">
+                    <thead id="previewHead" class="bg-slate-900/80 text-slate-400 text-xs uppercase sticky top-0 border-b border-slate-700">
+                        <!-- Dynamic Headers -->
+                    </thead>
+                    <tbody id="previewBody" class="text-slate-300 divide-y divide-slate-800">
+                        <tr><td class="p-8 text-center text-slate-500 italic">Enter keywords in the left panel to preview data...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="statusMsg" class="mt-4 text-center text-xs font-medium"></div>
+        </div>
+
+    </main>
+
+    <!-- Template Manager Modal -->
+    <div id="templateModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-800 border border-slate-700 rounded-3xl p-6 max-w-2xl w-full shadow-2xl space-y-5 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center border-b border-slate-700 pb-3">
+                <h3 class="text-lg font-bold text-white">Manage Templates & Columns</h3>
+                <button onclick="tutupModalTemplate()" class="text-slate-400 hover:text-white font-bold">&times;</button>
+            </div>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 uppercase mb-1">Select / Create Template</label>
+                    <div class="flex gap-2">
+                        <select id="modalTemplateSelect" onchange="loadTemplateToModal()" class="flex-1 bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl px-3 py-2">
+                        </select>
+                        <button onclick="buatTemplateBaru()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs px-3 py-2 rounded-xl font-medium">Create New</button>
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block text-xs font-medium text-slate-300 uppercase">Template Name</label>
+                    <input type="text" id="editNamaTemplate" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl px-3 py-2">
+                </div>
+
+                <!-- Column Configuration Section -->
+                <div class="space-y-2">
+                    <div class="flex justify-between items-center">
+                        <label class="text-xs font-medium text-slate-300 uppercase">Columns List (Designate Input Column)</label>
+                        <button onclick="tambahKolomHeader()" class="text-xs bg-indigo-600 hover:bg-indigo-500 text-white px-2.5 py-1 rounded-lg">+ Add Column</button>
+                    </div>
+                    <div id="columnHeaderContainer" class="flex flex-wrap gap-2 p-2 bg-slate-900/50 rounded-xl border border-slate-700">
+                        <!-- Dynamic Column Names -->
+                    </div>
+                    <p class="text-[11px] text-slate-400 italic">Click the <code class="text-indigo-400">[Input]</code> radio button on the column designated for your keyword inputs.</p>
+                </div>
+
+                <!-- Row Configuration Section -->
+                <div class="space-y-2">
+                    <div class="flex justify-between items-center">
+                        <label class="text-xs font-medium text-slate-300 uppercase">Template Rows (Drag & Drop to reorder)</label>
+                        <button onclick="tambahBarisTemplate()" class="text-xs bg-indigo-600 hover:bg-indigo-500 text-white px-2.5 py-1 rounded-lg">+ Add Row</button>
+                    </div>
+                    <div id="rowEditorContainer" class="space-y-2 max-h-52 overflow-y-auto pr-1">
+                        <!-- Dynamic Sortable Rows -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center pt-3 border-t border-slate-700">
+                <button onclick="hapusTemplateAktif()" class="text-xs bg-rose-600/30 text-rose-400 hover:bg-rose-600 hover:text-white px-3 py-2 rounded-xl transition">Delete Template</button>
+                <div class="flex gap-2">
+                    <button onclick="tutupModalTemplate()" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white text-xs rounded-xl">Cancel</button>
+                    <button onclick="simpanTemplate()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs rounded-xl font-semibold">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="text-center text-slate-500 text-xs py-4">
+        &copy; 2026 Welcome, Ju &bull; Advanced Template Engine
+    </footer>
+
+    <!-- Script Logic -->
+    <script>
+        function verifikasiPassword() {
+            const passInput = document.getElementById('inputPassword').value;
+            const errorMsg = document.getElementById('errorPasswordMsg');
+            const onboarding = document.getElementById('onboardingScreen');
+
+            if (passInput === "D@vincicode6969") {
+                errorMsg.classList.add('hidden');
+                onboarding.classList.add('opacity-0');
+                setTimeout(() => {
+                    onboarding.style.display = 'none';
+                }, 300);
+            } else {
+                errorMsg.classList.remove('hidden');
+                document.getElementById('inputPassword').focus();
+            }
+        }
+
+        function handlePasswordKey(event) {
+            if (event.key ===
