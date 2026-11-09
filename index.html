@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,7 +14,7 @@
 </head>
 <body class="bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-950 min-h-screen text-slate-100 flex flex-col justify-between p-4 sm:p-6">
 
-    <!-- Halaman Onboarding dengan Proteksi Password -->
+    <!-- Onboarding Page with Password Protection -->
     <div id="onboardingScreen" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 transition-opacity duration-300">
         <div class="bg-slate-800 border border-slate-700/80 rounded-3xl p-8 max-w-md w-full text-center shadow-2xl space-y-5">
             <div class="w-16 h-16 bg-indigo-500/10 border border-indigo-500/20 rounded-2xl mx-auto flex items-center justify-center text-3xl shadow-inner">
@@ -22,18 +22,18 @@
             </div>
             <div class="space-y-1">
                 <h2 class="text-2xl font-bold text-white">Welcome, Ju!</h2>
-                <p class="text-slate-400 text-sm">Enter Password.</p>
+                <p class="text-slate-400 text-sm">Please enter the secret password to unlock the application.</p>
             </div>
 
-            <!-- Input Password -->
+            <!-- Password Input -->
             <div class="space-y-2 text-left">
-                <label class="block text-xs font-medium text-slate-300 uppercase tracking-wider">Password Akses</label>
-                <input type="password" id="inputPassword" placeholder="Masukkan password..." onkeydown="handlePasswordKey(event)" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition">
-                <p id="errorPasswordMsg" class="text-rose-400 text-xs text-center hidden font-medium">Password salah! Silakan coba lagi.</p>
+                <label class="block text-xs font-medium text-slate-300 uppercase tracking-wider">Access Password</label>
+                <input type="password" id="inputPassword" placeholder="Enter password..." onkeydown="handlePasswordKey(event)" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition">
+                <p id="errorPasswordMsg" class="text-rose-400 text-xs text-center hidden font-medium">Incorrect password! Please try again.</p>
             </div>
 
             <button onclick="verifikasiPassword()" class="w-full bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-semibold py-3.5 px-6 rounded-2xl shadow-lg shadow-indigo-600/30 transition duration-200 flex items-center justify-center gap-2 cursor-pointer text-base">
-                <span>🚀</span> Helpkan Yuaaaaan
+                <span>🚀</span> Help me, Yuaaaan
             </button>
         </div>
     </div>
@@ -42,548 +42,51 @@
     <header class="max-w-6xl mx-auto w-full text-center py-4">
         <span class="bg-indigo-500/10 text-indigo-400 text-xs font-semibold px-3 py-1 rounded-full border border-indigo-500/20 uppercase tracking-wider">Advanced Edition</span>
         <h1 class="text-3xl sm:text-4xl font-bold tracking-tight mt-3 text-white">Excel Template & Column Builder</h1>
-        <p class="text-slate-400 text-sm mt-1">Multi-kata spasi otomatis jadi baris incremental berurutan.</p>
+        <p class="text-slate-400 text-sm mt-1">Multi-word space separated inputs automatically generate incremental sequential rows.</p>
     </header>
 
     <!-- Main Container -->
     <main class="max-w-6xl mx-auto w-full grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
         
-        <!-- Panel Kontrol (Kiri) -->
+        <!-- Control Panel (Left) -->
         <div class="bg-slate-800/60 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-6 shadow-xl flex flex-col justify-between space-y-6">
             <div class="space-y-4">
                 <h2 class="text-lg font-semibold text-white border-b border-slate-700 pb-3 flex items-center justify-between">
-                    <span>Konfigurasi</span>
+                    <span>Configuration</span>
                     <button onclick="bukaModalTemplate()" class="text-xs bg-indigo-600/40 hover:bg-indigo-600 text-indigo-300 hover:text-white px-2.5 py-1 rounded-lg border border-indigo-500/30 transition">+ Edit Template</button>
                 </h2>
 
-                <!-- Pilih Template -->
+                <!-- Select Template -->
                 <div>
-                    <label class="block text-xs font-medium text-slate-300 uppercase tracking-wider mb-2">Pilih Template Aktif</label>
+                    <label class="block text-xs font-medium text-slate-300 uppercase tracking-wider mb-2">Active Template</label>
                     <select id="templateChoice" onchange="gantiTemplate()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition">
                         <!-- Dynamic Options -->
                     </select>
                 </div>
 
-                <!-- Input Kata -->
+                <!-- Input Words -->
                 <div>
-                    <label class="block text-xs font-medium text-slate-300 uppercase tracking-wider mb-2" id="inputLabelTitle">Kata / Kode Utama (Pisah dengan spasi)</label>
-                    <textarea rows="2" id="inputKata" oninput="updatePreview()" placeholder="Contoh: ItemA ItemB ItemC" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl p-3 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition resize-none"></textarea>
-                    <p class="text-[10px] text-slate-400 mt-1">Setiap kata yang dipisah spasi akan men-generate ulang seluruh baris template secara berurutan.</p>
+                    <label class="block text-xs font-medium text-slate-300 uppercase tracking-wider mb-2" id="inputLabelTitle">Main Keywords (Separated by space)</label>
+                    <textarea rows="2" id="inputKata" oninput="updatePreview()" placeholder="Example: ItemA ItemB ItemC" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl p-3 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition resize-none"></textarea>
+                    <p class="text-[10px] text-slate-400 mt-1">Each space-separated word will sequentially generate all template rows.</p>
                 </div>
 
-                <!-- Info Template Aktif -->
+                <!-- Active Template Info -->
                 <div class="bg-slate-900/40 border border-slate-700/40 rounded-xl p-3 text-xs text-slate-400 space-y-1">
-                    <p class="font-semibold text-slate-300">Struktur Template:</p>
-                    <p id="infoTemplateDetail">Memuat...</p>
+                    <p class="font-semibold text-slate-300">Template Structure:</p>
+                    <p id="infoTemplateDetail">Loading...</p>
                 </div>
             </div>
 
-            <!-- Tombol Aksi -->
+            <!-- Action Button -->
             <button onclick="downloadExcel()" id="downloadBtn" disabled class="w-full bg-indigo-600/50 text-slate-400 font-medium py-3 rounded-xl transition duration-200 shadow-lg cursor-not-allowed flex items-center justify-center gap-2 text-sm">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
                 Download Excel (.xlsx)
             </button>
         </div>
 
-        <!-- Panel Preview (Kanan) -->
+        <!-- Preview Panel (Right) -->
         <div class="lg:col-span-2 bg-slate-800/60 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-6 shadow-xl flex flex-col">
             <div class="flex items-center justify-between border-b border-slate-700 pb-3 mb-4">
-                <h2 class="text-lg font-semibold text-white flex items-center gap-2">Pratinjau Hasil Data</h2>
-                <span id="rowCountBadge" class="text-xs bg-slate-700 text-slate-300 px-2.5 py-1 rounded-full font-medium">0 Baris</span>
-            </div>
-
-            <!-- Tabel Preview -->
-            <div class="flex-1 border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/50 max-h-80 overflow-y-auto">
-                <table class="w-full text-left border-collapse text-sm">
-                    <thead id="previewHead" class="bg-slate-900/80 text-slate-400 text-xs uppercase sticky top-0 border-b border-slate-700">
-                        <!-- Dynamic Headers -->
-                    </thead>
-                    <tbody id="previewBody" class="text-slate-300 divide-y divide-slate-800">
-                        <tr><td class="p-8 text-center text-slate-500 italic">Masukkan kata di panel sebelah kiri untuk melihat pratinjau...</td></tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div id="statusMsg" class="mt-4 text-center text-xs font-medium"></div>
-        </div>
-
-    </main>
-
-    <!-- Modal Manager Template -->
-    <div id="templateModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-slate-800 border border-slate-700 rounded-3xl p-6 max-w-2xl w-full shadow-2xl space-y-5 max-h-[90vh] overflow-y-auto">
-            <div class="flex justify-between items-center border-b border-slate-700 pb-3">
-                <h3 class="text-lg font-bold text-white">Kelola Template, Kolom, & Kolom Input</h3>
-                <button onclick="tutupModalTemplate()" class="text-slate-400 hover:text-white font-bold">&times;</button>
-            </div>
-
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-xs font-medium text-slate-300 uppercase mb-1">Pilih / Buat Template</label>
-                    <div class="flex gap-2">
-                        <select id="modalTemplateSelect" onchange="loadTemplateToModal()" class="flex-1 bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl px-3 py-2">
-                        </select>
-                        <button onclick="buatTemplateBaru()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs px-3 py-2 rounded-xl font-medium">Buat Baru</button>
-                    </div>
-                </div>
-
-                <div class="space-y-2">
-                    <label class="block text-xs font-medium text-slate-300 uppercase">Nama Template</label>
-                    <input type="text" id="editNamaTemplate" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl px-3 py-2">
-                </div>
-
-                <!-- Bagian Pengaturan Kolom -->
-                <div class="space-y-2">
-                    <div class="flex justify-between items-center">
-                        <label class="text-xs font-medium text-slate-300 uppercase">Daftar Kolom (Tandai mana yang jadi Kolom Input Kata)</label>
-                        <button onclick="tambahKolomHeader()" class="text-xs bg-indigo-600 hover:bg-indigo-500 text-white px-2.5 py-1 rounded-lg">+ Tambah Kolom</button>
-                    </div>
-                    <div id="columnHeaderContainer" class="flex flex-wrap gap-2 p-2 bg-slate-900/50 rounded-xl border border-slate-700">
-                        <!-- Dynamic Column Names -->
-                    </div>
-                    <p class="text-[11px] text-slate-400 italic">Klik tombol radio <code class="text-indigo-400">[Pilih sbg Input]</code> pada kolom yang ingin dijadikan tempat masuknya kata-kata inputan Anda.</p>
-                </div>
-
-                <!-- Bagian Pengaturan Baris -->
-                <div class="space-y-2">
-                    <div class="flex justify-between items-center">
-                        <label class="text-xs font-medium text-slate-300 uppercase">Atur Baris Template (Drag & Drop Baris)</label>
-                        <button onclick="tambahBarisTemplate()" class="text-xs bg-indigo-600 hover:bg-indigo-500 text-white px-2.5 py-1 rounded-lg">+ Tambah Baris</button>
-                    </div>
-                    <div id="rowEditorContainer" class="space-y-2 max-h-52 overflow-y-auto pr-1">
-                        <!-- Dynamic Sortable Rows -->
-                    </div>
-                </div>
-            </div>
-
-            <div class="flex justify-between items-center pt-3 border-t border-slate-700">
-                <button onclick="hapusTemplateAktif()" class="text-xs bg-rose-600/30 text-rose-400 hover:bg-rose-600 hover:text-white px-3 py-2 rounded-xl transition">Hapus Template Ini</button>
-                <div class="flex gap-2">
-                    <button onclick="tutupModalTemplate()" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white text-xs rounded-xl">Batal</button>
-                    <button onclick="simpanTemplate()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs rounded-xl font-semibold">Simpan Perubahan</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <footer class="text-center text-slate-500 text-xs py-4">
-        &copy; 2026 Welcome, Ju &bull; Advanced Template Engine
-    </footer>
-
-    <!-- Script Logika -->
-    <script>
-        function verifikasiPassword() {
-            const passInput = document.getElementById('inputPassword').value;
-            const errorMsg = document.getElementById('errorPasswordMsg');
-            const onboarding = document.getElementById('onboardingScreen');
-
-            if (passInput === "D@vincicode6969") {
-                errorMsg.classList.add('hidden');
-                onboarding.classList.add('opacity-0');
-                setTimeout(() => onboarding.style.display = 'none', 300);
-            } else {
-                errorMsg.classList.remove('hidden');
-                document.getElementById('inputPassword').focus();
-            }
-        }
-
-        function handlePasswordKey(event) {
-            if (event.key === 'Enter') {
-                verifikasiPassword();
-            }
-        }
-
-        const defaultTemplates = [
-            {
-                id: "tmpl_1",
-                nama: "Template 1: Standar Inkremental",
-                columns: [
-                    { name: "No", isInput: false },
-                    { name: "Kode Produk", isInput: true },
-                    { name: "Keterangan", isInput: false },
-                    { name: "Status", isInput: false }
-                ],
-                rows: [
-                    ["Persiapan Awal", "Aktif"],
-                    ["Proses Utama", "Pending"],
-                    ["Finalisasi", "Selesai"]
-                ]
-            }
-        ];
-
-        let templates = JSON.parse(localStorage.getItem('saved_templates_ju_v4')) || defaultTemplates;
-        let cachedExcelData = [];
-
-        function simpanKeStorage() {
-            localStorage.setItem('saved_templates_ju_v4', JSON.stringify(templates));
-        }
-
-        function initDropdowns() {
-            const select = document.getElementById('templateChoice');
-            const modalSelect = document.getElementById('modalTemplateSelect');
-            select.innerHTML = '';
-            modalSelect.innerHTML = '';
-
-            templates.forEach(t => {
-                select.innerHTML += `<option value="${t.id}">${t.nama}</option>`;
-                modalSelect.innerHTML += `<option value="${t.id}">${t.nama}</option>`;
-            });
-            gantiTemplate();
-        }
-
-        function gantiTemplate() {
-            updateInfoDetail();
-            updatePreview();
-        }
-
-        function updateInfoDetail() {
-            const currentId = document.getElementById('templateChoice').value;
-            const t = templates.find(x => x.id === currentId);
-            if (!t) return;
-            let inputCol = t.columns.find(c => c.isInput);
-            let inputColName = inputCol ? inputCol.name : "Tidak ada";
-            document.getElementById('infoTemplateDetail').innerText = `${t.columns.length} Kolom, ${t.rows.length} Baris Template. (Kolom Input: "${inputColName}").`;
-            document.getElementById('inputLabelTitle').innerText = `Kata / Kode Utama (Kolom: "${inputColName}" - Pisah dengan spasi)`;
-        }
-
-        function getDataBaris() {
-            const currentId = document.getElementById('templateChoice').value;
-            const rawInput = document.getElementById('inputKata').value.trim();
-            const t = templates.find(x => x.id === currentId);
-
-            if (!rawInput || !t || t.rows.length === 0) return [];
-
-            const kataList = rawInput.split(/\s+/).filter(Boolean);
-            if (kataList.length === 0) return [];
-
-            let resultRows = [];
-            let globalIndex = 1;
-
-            let inputColIndex = t.columns.findIndex(c => c.isInput);
-            if (inputColIndex === -1) inputColIndex = 0;
-
-            kataList.forEach((kata) => {
-                t.rows.forEach((rowVal) => {
-                    let obj = {};
-                    let templateValIdx = 0;
-
-                    t.columns.forEach((colObj, cIdx) => {
-                        if (cIdx === inputColIndex) {
-                            obj[colObj.name] = kata;
-                        } else {
-                            obj[colObj.name] = rowVal[templateValIdx] || "";
-                            templateValIdx++;
-                        }
-                    });
-                    
-                    resultRows.push({
-                        "No. Urut": globalIndex++,
-                        ...obj
-                    });
-                });
-            });
-
-            return resultRows;
-        }
-
-        function updatePreview() {
-            const previewHead = document.getElementById('previewHead');
-            const previewBody = document.getElementById('previewBody');
-            const downloadBtn = document.getElementById('downloadBtn');
-            const rowCountBadge = document.getElementById('rowCountBadge');
-            const rawInput = document.getElementById('inputKata').value.trim();
-            const currentId = document.getElementById('templateChoice').value;
-            const t = templates.find(x => x.id === currentId);
-            
-            cachedExcelData = getDataBaris();
-
-            if (!rawInput || !t || cachedExcelData.length === 0) {
-                previewHead.innerHTML = `<tr><th class="p-3">Info</th></tr>`;
-                previewBody.innerHTML = `<tr><td class="p-8 text-center text-slate-500 italic">Masukkan kata dipisah spasi di panel sebelah kiri...</td></tr>`;
-                rowCountBadge.innerText = "0 Baris";
-                downloadBtn.className = "w-full bg-indigo-600/50 text-slate-400 font-medium py-3 rounded-xl transition duration-200 shadow-lg cursor-not-allowed flex items-center justify-center gap-2 text-sm";
-                downloadBtn.disabled = true;
-                return;
-            }
-
-            let headHtml = "<tr><th class='p-3'>No.</th>";
-            t.columns.forEach((col) => {
-                let highlight = col.isInput ? "text-indigo-400 bg-indigo-950/30" : "";
-                headHtml += `<th class="p-3 ${highlight}">${col.name} ${col.isInput ? '(Input)' : ''}</th>`;
-            });
-            headHtml += "</tr>";
-            previewHead.innerHTML = headHtml;
-
-            let bodyHtml = "";
-            cachedExcelData.forEach((item, idx) => {
-                bodyHtml += `<tr class="hover:bg-slate-800/50 transition">`;
-                bodyHtml += `<td class="p-3 text-slate-500">${idx + 1}</td>`;
-                t.columns.forEach((col) => {
-                    let style = col.isInput ? "font-semibold text-white bg-indigo-950/40" : "text-slate-300";
-                    bodyHtml += `<td class="p-3 ${style}">${item[col.name]}</td>`;
-                });
-                bodyHtml += `</tr>`;
-            });
-            previewBody.innerHTML = bodyHtml;
-            rowCountBadge.innerText = `${cachedExcelData.length} Baris`;
-
-            downloadBtn.className = "w-full bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-3 rounded-xl transition duration-200 shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2 text-sm cursor-pointer";
-            downloadBtn.disabled = false;
-        }
-
-        function downloadExcel() {
-            if (cachedExcelData.length === 0) return;
-            const currentId = document.getElementById('templateChoice').value;
-            const t = templates.find(x => x.id === currentId);
-            const statusMsg = document.getElementById('statusMsg');
-
-            let cleanData = cachedExcelData.map(item => {
-                let copy = { ...item };
-                delete copy["No. Urut"];
-                return copy;
-            });
-
-            const worksheet = XLSX.utils.json_to_sheet(cleanData);
-            const workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
-
-            XLSX.writeFile(workbook, `export_incremental_${t ? t.nama.replace(/\s+/g, '_') : 'custom'}.xlsx`);
-
-            statusMsg.className = "mt-4 text-center text-xs font-medium text-emerald-400";
-            statusMsg.innerText = `Sukses! File Excel incremental berhasil diunduh.`;
-        }
-
-        function bukaModalTemplate() {
-            document.getElementById('templateModal').classList.remove('hidden');
-            loadTemplateToModal();
-        }
-
-        function tutupModalTemplate() {
-            document.getElementById('templateModal').classList.add('hidden');
-            initDropdowns();
-        }
-
-        function loadTemplateToModal() {
-            const id = document.getElementById('modalTemplateSelect').value;
-            const t = templates.find(x => x.id === id);
-            if (!t) return;
-
-            document.getElementById('editNamaTemplate').value = t.nama;
-            renderColumnHeaderEditor(t.columns);
-            renderRowEditor(t.rows, t.columns);
-        }
-
-        function renderColumnHeaderEditor(columns) {
-            const container = document.getElementById('columnHeaderContainer');
-            container.innerHTML = '';
-            columns.forEach((col, idx) => {
-                let checkedAttr = col.isInput ? "checked" : "";
-                container.innerHTML += `
-                    <div class="flex items-center gap-2 bg-slate-800 border border-slate-700 px-3 py-1.5 rounded-xl col-header-item">
-                        <input type="text" value="${col.name}" class="bg-transparent text-xs text-slate-200 outline-none w-24 col-name-input font-medium" />
-                        <label class="flex items-center gap-1 text-[10px] text-indigo-300 cursor-pointer bg-indigo-950/60 px-2 py-1 rounded-lg border border-indigo-500/30">
-                            <input type="radio" name="inputColRadio" ${checkedAttr} onchange="updateInputColRadio(${idx})" class="accent-indigo-500" />
-                            <span>Input</span>
-                        </label>
-                        <button onclick="hapusKolomHeader(this)" class="text-rose-400 font-bold hover:text-rose-300 px-1">&times;</button>
-                    </div>
-                `;
-            });
-        }
-
-        function updateInputColRadio(selectedIndex) {
-            let radios = document.querySelectorAll('#columnHeaderContainer .col-header-item');
-            radios.forEach((item, idx) => {
-                let radio = item.querySelector('input[type="radio"]');
-                radio.checked = (idx === selectedIndex);
-            });
-            syncRowsToCurrentColumns();
-        }
-
-        function tambahKolomHeader() {
-            const container = document.getElementById('columnHeaderContainer');
-            let totalCols = container.querySelectorAll('.col-header-item').length;
-            let isFirst = totalCols === 0;
-
-            container.innerHTML += `
-                <div class="flex items-center gap-2 bg-slate-800 border border-slate-700 px-3 py-1.5 rounded-xl col-header-item">
-                    <input type="text" placeholder="Nama Kolom" class="bg-transparent text-xs text-slate-200 outline-none w-24 col-name-input font-medium" />
-                    <label class="flex items-center gap-1 text-[10px] text-indigo-300 cursor-pointer bg-indigo-950/60 px-2 py-1 rounded-lg border border-indigo-500/30">
-                        <input type="radio" name="inputColRadio" ${isFirst ? 'checked' : ''} onchange="updateInputColRadio(${totalCols})" class="accent-indigo-500" />
-                        <span>Input</span>
-                    </label>
-                    <button onclick="hapusKolomHeader(this)" class="text-rose-400 font-bold hover:text-rose-300 px-1">&times;</button>
-                </div>
-            `;
-            syncRowsToCurrentColumns();
-        }
-
-        function hapusKolomHeader(btn) {
-            const container = document.getElementById('columnHeaderContainer');
-            if (container.querySelectorAll('.col-header-item').length <= 2) {
-                alert("Minimal harus ada 2 kolom dalam template!");
-                return;
-            }
-            btn.closest('.col-header-item').remove();
-            
-            let radios = document.querySelectorAll('#columnHeaderContainer input[type="radio"]');
-            let hasChecked = Array.from(radios).some(r => r.checked);
-            if (!hasChecked && radios.length > 0) {
-                radios[0].checked = true;
-            }
-            syncRowsToCurrentColumns();
-        }
-
-        function getKolomListFromModal() {
-            let cols = [];
-            let items = document.querySelectorAll('#columnHeaderContainer .col-header-item');
-            items.forEach((item) => {
-                let name = item.querySelector('.col-name-input').value.trim() || "Kolom";
-                let isInput = item.querySelector('input[type="radio"]').checked;
-                cols.push({ name, isInput });
-            });
-            return cols;
-        }
-
-        function renderRowEditor(rows, columns) {
-            const container = document.getElementById('rowEditorContainer');
-            container.innerHTML = '';
-            
-            let nonInputColsCount = columns.filter(c => !c.isInput).length;
-
-            rows.forEach((rowVals) => {
-                let rowHtml = `<div draggable="true" class="sortable-row flex gap-2 items-center bg-slate-900/70 p-2 rounded-xl border border-slate-700 cursor-grab active:cursor-grabbing">
-                    <span class="text-slate-500 text-xs font-bold px-1">☰</span>`;
-                
-                for(let i=0; i<nonInputColsCount; i++) {
-                    let val = rowVals[i] || "";
-                    rowHtml += `<input type="text" value="${val}" placeholder="Nilai Template" class="flex-1 bg-slate-800 text-xs text-slate-200 px-2.5 py-1.5 rounded-lg border border-slate-700 row-val-input" />`;
-                }
-                rowHtml += `<button onclick="hapusBarisEditor(this)" class="text-rose-400 hover:text-rose-300 font-bold px-2">&times;</button></div>`;
-                container.innerHTML += rowHtml;
-            });
-            initDragAndDrop();
-        }
-
-        function syncRowsToCurrentColumns() {
-            let cols = getKolomListFromModal();
-            let rowElements = document.querySelectorAll('#rowEditorContainer > div');
-            let currentRowsData = [];
-            rowElements.forEach(div => {
-                let inputs = div.querySelectorAll('.row-val-input');
-                let vals = [];
-                inputs.forEach(inp => vals.push(inp.value));
-                currentRowsData.push(vals);
-            });
-            renderRowEditor(currentRowsData, cols);
-        }
-
-        function tambahBarisTemplate() {
-            let cols = getKolomListFromModal();
-            let nonInputColsCount = cols.filter(c => !c.isInput).length;
-            let container = document.getElementById('rowEditorContainer');
-            
-            let rowHtml = `<div draggable="true" class="sortable-row flex gap-2 items-center bg-slate-900/70 p-2 rounded-xl border border-slate-700 cursor-grab active:cursor-grabbing">
-                <span class="text-slate-500 text-xs font-bold px-1">☰</span>`;
-            for(let i=0; i<nonInputColsCount; i++) {
-                rowHtml += `<input type="text" placeholder="Nilai Template" class="flex-1 bg-slate-800 text-xs text-slate-200 px-2.5 py-1.5 rounded-lg border border-slate-700 row-val-input" />`;
-            }
-            rowHtml += `<button onclick="hapusBarisEditor(this)" class="text-rose-400 hover:text-rose-300 font-bold px-2">&times;</button></div>`;
-            container.innerHTML += rowHtml;
-            initDragAndDrop();
-        }
-
-        function hapusBarisEditor(btn) {
-            btn.closest('div').remove();
-        }
-
-        function initDragAndDrop() {
-            const container = document.getElementById('rowEditorContainer');
-            const rows = container.querySelectorAll('.sortable-row');
-
-            rows.forEach(row => {
-                row.addEventListener('dragstart', () => row.classList.add('dragging'));
-                row.addEventListener('dragend', () => row.classList.remove('dragging'));
-            });
-
-            container.addEventListener('dragover', e => {
-                e.preventDefault();
-                const afterElement = getDragAfterElement(container, e.clientY);
-                const draggable = container.querySelector('.dragging');
-                if (afterElement == null) {
-                    container.appendChild(draggable);
-                } else {
-                    container.insertBefore(draggable, afterElement);
-                }
-            });
-        }
-
-        function getDragAfterElement(container, y) {
-            const draggableElements = [...container.querySelectorAll('.sortable-row:not(.dragging)')];
-            return draggableElements.reduce((closest, child) => {
-                const box = child.getBoundingClientRect();
-                const offset = y - box.top - box.height / 2;
-                if (offset < 0 && offset > closest.offset) {
-                    return { offset: offset, element: child };
-                } else {
-                    return closest;
-                }
-            }, { offset: Number.NEGATIVE_INFINITY }).element;
-        }
-
-        function buatTemplateBaru() {
-            const newId = 'tmpl_' + Date.now();
-            templates.push({
-                id: newId,
-                nama: "Template Baru",
-                columns: [
-                    { name: "No", isInput: false },
-                    { name: "Kata Kunci", isInput: true },
-                    { name: "Keterangan", isInput: false }
-                ],
-                rows: [["Data Selesai"]]
-            });
-            initDropdowns();
-            document.getElementById('modalTemplateSelect').value = newId;
-            loadTemplateToModal();
-        }
-
-        function simpanTemplate() {
-            const id = document.getElementById('modalTemplateSelect').value;
-            const t = templates.find(x => x.id === id);
-            if (!t) return;
-
-            t.nama = document.getElementById('editNamaTemplate').value.trim() || "Tanpa Nama";
-            t.columns = getKolomListFromModal();
-
-            let newRows = [];
-            const rowDivs = document.querySelectorAll('#rowEditorContainer > div');
-            rowDivs.forEach(div => {
-                let inputs = div.querySelectorAll('.row-val-input');
-                let vals = [];
-                inputs.forEach(inp => vals.push(inp.value.trim()));
-                newRows.push(vals);
-            });
-            t.rows = newRows;
-
-            simpanKeStorage();
-            tutupModalTemplate();
-            alert("Template berhasil disimpan!");
-        }
-
-        function hapusTemplateAktif() {
-            if (templates.length <= 1) {
-                alert("Minimal harus menyisakan 1 template!");
-                return;
-            }
-            const id = document.getElementById('modalTemplateSelect').value;
-            templates = templates.filter(x => x.id !== id);
-            simpanKeStorage();
-            initDropdowns();
-            tutupModalTemplate();
-        }
-
-        initDropdowns();
-    </script>
-</body>
-</html>
+                <h2 class="text-lg font-semibold text-white flex items-center gap-2">Data Preview</h2>
+                <span id="rowCountBadge" class="text-xs bg-slate-700 text-slate-300 px-2.5 py-1 rounded-full font-
