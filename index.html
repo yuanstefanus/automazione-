@@ -14,17 +14,25 @@
 </head>
 <body class="bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-950 min-h-screen text-slate-100 flex flex-col justify-between p-4 sm:p-6">
 
-    <!-- Halaman Onboarding dengan Ikon Roket 🚀 -->
+    <!-- Halaman Onboarding dengan Proteksi Password -->
     <div id="onboardingScreen" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 transition-opacity duration-300">
-        <div class="bg-slate-800 border border-slate-700/80 rounded-3xl p-8 max-w-md w-full text-center shadow-2xl space-y-6">
+        <div class="bg-slate-800 border border-slate-700/80 rounded-3xl p-8 max-w-md w-full text-center shadow-2xl space-y-5">
             <div class="w-16 h-16 bg-indigo-500/10 border border-indigo-500/20 rounded-2xl mx-auto flex items-center justify-center text-3xl shadow-inner">
                 🚀
             </div>
-            <div class="space-y-2">
+            <div class="space-y-1">
                 <h2 class="text-2xl font-bold text-white">Welcome, Ju!</h2>
-                <p class="text-slate-400 text-sm">Fitur Multi-Kata & Custom Kolom Input Aktif. Ketik beberapa kata dengan spasi untuk generate inkremental!</p>
+                <p class="text-slate-400 text-sm">Masukkan password rahasia untuk membuka aplikasi.</p>
             </div>
-            <button onclick="mulaiAplikasi()" class="w-full bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-semibold py-3.5 px-6 rounded-2xl shadow-lg shadow-indigo-600/30 transition duration-200 flex items-center justify-center gap-2 cursor-pointer text-base">
+
+            <!-- Input Password -->
+            <div class="space-y-2 text-left">
+                <label class="block text-xs font-medium text-slate-300 uppercase tracking-wider">Password Akses</label>
+                <input type="password" id="inputPassword" placeholder="Masukkan password..." onkeydown="handlePasswordKey(event)" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition">
+                <p id="errorPasswordMsg" class="text-rose-400 text-xs text-center hidden font-medium">Password salah! Silakan coba lagi.</p>
+            </div>
+
+            <button onclick="verifikasiPassword()" class="w-full bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-semibold py-3.5 px-6 rounded-2xl shadow-lg shadow-indigo-600/30 transition duration-200 flex items-center justify-center gap-2 cursor-pointer text-base">
                 <span>🚀</span> Helpkan Yuaaaaan
             </button>
         </div>
@@ -164,10 +172,25 @@
 
     <!-- Script Logika -->
     <script>
-        function mulaiAplikasi() {
+        function verifikasiPassword() {
+            const passInput = document.getElementById('inputPassword').value;
+            const errorMsg = document.getElementById('errorPasswordMsg');
             const onboarding = document.getElementById('onboardingScreen');
-            onboarding.classList.add('opacity-0');
-            setTimeout(() => onboarding.style.display = 'none', 300);
+
+            if (passInput === "D@vincicode6969") {
+                errorMsg.classList.add('hidden');
+                onboarding.classList.add('opacity-0');
+                setTimeout(() => onboarding.style.display = 'none', 300);
+            } else {
+                errorMsg.classList.remove('hidden');
+                document.getElementById('inputPassword').focus();
+            }
+        }
+
+        function handlePasswordKey(event) {
+            if (event.key === 'Enter') {
+                verifikasiPassword();
+            }
         }
 
         const defaultTemplates = [
@@ -230,18 +253,15 @@
 
             if (!rawInput || !t || t.rows.length === 0) return [];
 
-            // Pecah input berdasarkan spasi (mengabaikan spasi berlebih)
             const kataList = rawInput.split(/\s+/).filter(Boolean);
             if (kataList.length === 0) return [];
 
             let resultRows = [];
             let globalIndex = 1;
 
-            // Cari tahu indeks kolom mana yang bertindak sebagai input
             let inputColIndex = t.columns.findIndex(c => c.isInput);
-            if (inputColIndex === -1) inputColIndex = 0; // Fallback ke kolom pertama jika belum diset
+            if (inputColIndex === -1) inputColIndex = 0;
 
-            // Lakukan perulangan inkremental untuk setiap kata
             kataList.forEach((kata) => {
                 t.rows.forEach((rowVal) => {
                     let obj = {};
@@ -249,14 +269,13 @@
 
                     t.columns.forEach((colObj, cIdx) => {
                         if (cIdx === inputColIndex) {
-                            obj[colObj.name] = kata; // Masukkan kata ke kolom input yang dipilih
+                            obj[colObj.name] = kata;
                         } else {
                             obj[colObj.name] = rowVal[templateValIdx] || "";
                             templateValIdx++;
                         }
                     });
                     
-                    // Tambahkan nomor urut otomatis jika ada kolom bernama "No" atau sejenisnya
                     resultRows.push({
                         "No. Urut": globalIndex++,
                         ...obj
@@ -314,12 +333,10 @@
 
         function downloadExcel() {
             if (cachedExcelData.length === 0) return;
-            const rawInput = document.getElementById('inputKata').value.trim();
             const currentId = document.getElementById('templateChoice').value;
             const t = templates.find(x => x.id === currentId);
             const statusMsg = document.getElementById('statusMsg');
 
-            // Hapus properti "No. Urut" tambahan agar format sesuai dengan kolom asli template
             let cleanData = cachedExcelData.map(item => {
                 let copy = { ...item };
                 delete copy["No. Urut"];
@@ -409,7 +426,6 @@
             }
             btn.closest('.col-header-item').remove();
             
-            // Pastikan minimal ada 1 radio yang tercentang setelah penghapusan
             let radios = document.querySelectorAll('#columnHeaderContainer input[type="radio"]');
             let hasChecked = Array.from(radios).some(r => r.checked);
             if (!hasChecked && radios.length > 0) {
@@ -433,7 +449,6 @@
             const container = document.getElementById('rowEditorContainer');
             container.innerHTML = '';
             
-            // Hitung jumlah kolom template selain kolom input kata
             let nonInputColsCount = columns.filter(c => !c.isInput).length;
 
             rows.forEach((rowVals) => {
