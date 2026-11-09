@@ -6,10 +6,17 @@
     <title>Welcome, Ju - You One v1.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style> 
         body { font-family: 'Inter', sans-serif; } 
         .dragging { opacity: 0.4; background: rgba(99, 102, 241, 0.2); }
+        /* Hilangkan panah spinner pada input number PIN */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-950 min-h-screen text-slate-100 flex flex-col justify-between p-4 sm:p-6 relative">
@@ -22,26 +29,31 @@
         <span class="hidden sm:inline">Kunci</span>
     </button>
 
-    <!-- Halaman Onboarding dengan Proteksi Password -->
+    <!-- Halaman Onboarding dengan Keamanan PIN 6 Angka -->
     <div id="onboardingScreen" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-center justify-center p-4 transition-opacity duration-300">
-        <div class="bg-slate-800 border border-slate-700/80 rounded-3xl p-8 max-w-md w-full text-center shadow-2xl space-y-5">
+        <div class="bg-slate-800 border border-slate-700/80 rounded-3xl p-8 max-w-md w-full text-center shadow-2xl space-y-6">
             <div class="w-16 h-16 bg-indigo-500/10 border border-indigo-500/20 rounded-2xl mx-auto flex items-center justify-center text-3xl shadow-inner">
-                🚀
+                🔐
             </div>
             <div class="space-y-1">
                 <h2 class="text-2xl font-bold text-white">Welcome, Ju!</h2>
-                <p class="text-slate-400 text-sm">Masukkan password rahasia untuk membuka aplikasi.</p>
+                <p class="text-slate-400 text-sm">Masukkan PIN 6 Angka Rahasia Anda.</p>
             </div>
 
-            <!-- Input Password -->
-            <div class="space-y-2 text-left">
-                <label class="block text-xs font-medium text-slate-300 uppercase tracking-wider">Password Akses</label>
-                <input type="password" id="inputPassword" placeholder="Masukkan password..." onkeydown="handlePasswordKey(event)" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition">
-                <p id="errorPasswordMsg" class="text-rose-400 text-xs text-center hidden font-medium">Password salah! Silakan coba lagi.</p>
+            <!-- Kotak Input PIN Terpisah (6 Kotak) -->
+            <div class="flex justify-center gap-2 sm:gap-3" id="pinContainer">
+                <input type="password" maxlength="1" inputmode="numeric" pattern="[0-9]*" oninput="handlePinInput(this, 0)" onkeydown="handlePinKeydown(event, 0)" class="pin-box w-11 h-12 sm:w-12 sm:h-14 bg-slate-900 border border-slate-700 text-white text-center text-xl font-bold rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none transition shadow-inner" />
+                <input type="password" maxlength="1" inputmode="numeric" pattern="[0-9]*" oninput="handlePinInput(this, 1)" onkeydown="handlePinKeydown(event, 1)" class="pin-box w-11 h-12 sm:w-12 sm:h-14 bg-slate-900 border border-slate-700 text-white text-center text-xl font-bold rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none transition shadow-inner" />
+                <input type="password" maxlength="1" inputmode="numeric" pattern="[0-9]*" oninput="handlePinInput(this, 2)" onkeydown="handlePinKeydown(event, 2)" class="pin-box w-11 h-12 sm:w-12 sm:h-14 bg-slate-900 border border-slate-700 text-white text-center text-xl font-bold rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none transition shadow-inner" />
+                <input type="password" maxlength="1" inputmode="numeric" pattern="[0-9]*" oninput="handlePinInput(this, 3)" onkeydown="handlePinKeydown(event, 3)" class="pin-box w-11 h-12 sm:w-12 sm:h-14 bg-slate-900 border border-slate-700 text-white text-center text-xl font-bold rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none transition shadow-inner" />
+                <input type="password" maxlength="1" inputmode="numeric" pattern="[0-9]*" oninput="handlePinInput(this, 4)" onkeydown="handlePinKeydown(event, 4)" class="pin-box w-11 h-12 sm:w-12 sm:h-14 bg-slate-900 border border-slate-700 text-white text-center text-xl font-bold rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none transition shadow-inner" />
+                <input type="password" maxlength="1" inputmode="numeric" pattern="[0-9]*" oninput="handlePinInput(this, 5)" onkeydown="handlePinKeydown(event, 5)" class="pin-box w-11 h-12 sm:w-12 sm:h-14 bg-slate-900 border border-slate-700 text-white text-center text-xl font-bold rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none transition shadow-inner" />
             </div>
 
-            <button type="button" onclick="verifikasiPassword()" class="w-full bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-semibold py-3.5 px-6 rounded-2xl shadow-lg shadow-indigo-600/30 transition duration-200 flex items-center justify-center gap-2 cursor-pointer text-base">
-                <span>🚀</span> Helpkan Yuaaaaan
+            <p id="errorPinMsg" class="text-rose-400 text-xs text-center hidden font-medium">PIN salah! Silakan coba lagi.</p>
+
+            <button type="button" onclick="verifikasiPin()" class="w-full bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-semibold py-3.5 px-6 rounded-2xl shadow-lg shadow-indigo-600/30 transition duration-200 flex items-center justify-center gap-2 cursor-pointer text-base">
+                <span>🚀</span> Buka Aplikasi
             </button>
         </div>
     </div>
@@ -164,24 +176,62 @@
 
             <!-- Dashboard Result Container -->
             <div id="inventoryDashboardContainer" class="hidden space-y-6">
-                <div class="flex items-center justify-between border-b border-slate-700 pb-3">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-slate-700 pb-3 gap-2">
                     <h3 class="text-xl font-bold text-white flex items-center gap-2">📈 Ringkasan Dashboard Inventory</h3>
                     <span id="totalRowsInventoryBadge" class="text-xs bg-indigo-900/60 text-indigo-300 border border-indigo-500/30 px-3 py-1 rounded-full font-medium">0 Data Tercatat</span>
+                </div>
+
+                <!-- PANEL FILTER (Project, Warehouse, Item) -->
+                <div class="bg-slate-800/60 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-5 shadow-xl grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 uppercase tracking-wider mb-1.5">Filter Project</label>
+                        <select id="filterProject" onchange="applyFiltersAndRender()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded-xl px-3 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition">
+                            <option value="ALL">Semua Project</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 uppercase tracking-wider mb-1.5">Filter Warehouse</label>
+                        <select id="filterWarehouse" onchange="applyFiltersAndRender()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded-xl px-3 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition">
+                            <option value="ALL">Semua Warehouse</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 uppercase tracking-wider mb-1.5">Filter Item / Code</label>
+                        <select id="filterItem" onchange="applyFiltersAndRender()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded-xl px-3 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition">
+                            <option value="ALL">Semua Item</option>
+                        </select>
+                    </div>
                 </div>
 
                 <!-- Widget Kartu Statistik -->
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div class="bg-slate-800/60 border border-slate-700/50 rounded-2xl p-5 shadow-lg space-y-1">
-                        <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Total Baris / Item</p>
+                        <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Total Baris / Item Terfilter</p>
                         <h4 id="statTotalItems" class="text-2xl font-bold text-white">0</h4>
                     </div>
                     <div class="bg-slate-800/60 border border-slate-700/50 rounded-2xl p-5 shadow-lg space-y-1">
-                        <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Kolom Terdeteksi</p>
-                        <h4 id="statTotalColumns" class="text-2xl font-bold text-indigo-400">0</h4>
+                        <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Total Qty / Volume</p>
+                        <h4 id="statTotalQty" class="text-2xl font-bold text-indigo-400">0</h4>
                     </div>
                     <div class="bg-slate-800/60 border border-slate-700/50 rounded-2xl p-5 shadow-lg space-y-1">
                         <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Status Analisis</p>
                         <h4 class="text-lg font-semibold text-emerald-400 flex items-center gap-1.5">✅ Berhasil Dimuat</h4>
+                    </div>
+                </div>
+
+                <!-- Grafik Statistik (Chart.js) -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="bg-slate-800/60 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-6 shadow-xl space-y-4">
+                        <h4 class="text-md font-semibold text-white">Distribusi Berdasarkan Warehouse</h4>
+                        <div class="relative h-64 flex items-center justify-center">
+                            <canvas id="warehouseChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="bg-slate-800/60 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-6 shadow-xl space-y-4">
+                        <h4 class="text-md font-semibold text-white">Distribusi Berdasarkan Project</h4>
+                        <div class="relative h-64 flex items-center justify-center">
+                            <canvas id="projectChart"></canvas>
+                        </div>
                     </div>
                 </div>
 
@@ -317,11 +367,20 @@
 
     <!-- Script Logika -->
     <script>
+        // PIN Rahasia 6 Angka Anda (Contoh: 123456 - bisa diubah di sini)
+        const CORRECT_PIN = "696969";
+
         window.addEventListener('DOMContentLoaded', () => {
             const isUnlocked = sessionStorage.getItem('app_unlocked_ju');
             const onboarding = document.getElementById('onboardingScreen');
             if (isUnlocked === 'true') {
                 onboarding.style.display = 'none';
+            } else {
+                // Fokus otomatis ke kotak PIN pertama
+                setTimeout(() => {
+                    const firstPinBox = document.querySelector('.pin-box');
+                    if (firstPinBox) firstPinBox.focus();
+                }, 100);
             }
 
             const savedTab = sessionStorage.getItem('active_tab_ju') || 'configure';
@@ -334,7 +393,7 @@
                     if (parsedInventoryData.length > 0) {
                         document.getElementById('fileLabelName').innerText = `📄 Inventory_Data_Saved.xlsx`;
                         document.getElementById('deleteInventoryBtn').classList.remove('hidden');
-                        renderDashboardUI();
+                        initDashboardFiltersAndUI();
                     }
                 } catch(e) {
                     console.error("Gagal memuat inventory tersimpan", e);
@@ -342,12 +401,57 @@
             }
         });
 
-        function verifikasiPassword() {
-            const passInput = document.getElementById('inputPassword').value;
-            const errorMsg = document.getElementById('errorPasswordMsg');
+        // Logika Interaksi Input PIN ala ATM
+        function handlePinInput(input, index) {
+            let val = input.value;
+            // Hanya ambil angka terakhir jika diketik lebih dari 1 karakter
+            if (val.length > 1) {
+                input.value = val.slice(-1);
+            }
+
+            // Jika ada angka yang dimasukkan dan bukan kotak terakhir, pindah ke kotak berikutnya
+            if (input.value !== "" && index < 5) {
+                const nextBox = document.querySelectorAll('.pin-box')[index + 1];
+                if (nextBox) nextBox.focus();
+            }
+
+            // Otomatis verifikasi jika 6 kotak sudah terisi penuh
+            checkAutoVerifyPin();
+        }
+
+        function handlePinKeydown(event, index) {
+            const boxes = document.querySelectorAll('.pin-box');
+            if (event.key === 'Backspace') {
+                if (boxes[index].value === "" && index > 0) {
+                    boxes[index - 1].focus();
+                    boxes[index - 1].value = "";
+                } else {
+                    boxes[index].value = "";
+                }
+                event.preventDefault();
+            } else if (event.key === 'Enter') {
+                verifikasiPin();
+            }
+        }
+
+        function checkAutoVerifyPin() {
+            const boxes = document.querySelectorAll('.pin-box');
+            let pinStr = "";
+            boxes.forEach(box => pinStr += box.value);
+            if (pinStr.length === 6) {
+                verifikasiPin();
+            }
+        }
+
+        function verifikasiPin() {
+            const boxes = document.querySelectorAll('.pin-box');
+            let enteredPin = "";
+            boxes.forEach(box => enteredPin += box.value);
+
+            const errorMsg = document.getElementById('errorPinMsg');
             const onboarding = document.getElementById('onboardingScreen');
 
-            if (passInput === "D@vincicode6969") {
+            if (enteredPin === CORRECT_PIN) {
                 errorMsg.classList.add('hidden');
                 sessionStorage.setItem('app_unlocked_ju', 'true');
                 onboarding.classList.add('opacity-0');
@@ -356,30 +460,27 @@
                 }, 300);
             } else {
                 errorMsg.classList.remove('hidden');
-                document.getElementById('inputPassword').focus();
-            }
-        }
-
-        function handlePasswordKey(event) {
-            if (event.key === 'Enter') {
-                verifikasiPassword();
+                // Reset semua kotak PIN dan fokus kembali ke kotak pertama
+                boxes.forEach(box => box.value = "");
+                boxes[0].focus();
             }
         }
 
         function kunciAplikasi() {
             const onboarding = document.getElementById('onboardingScreen');
-            const passInput = document.getElementById('inputPassword');
-            const errorMsg = document.getElementById('errorPasswordMsg');
+            const errorMsg = document.getElementById('errorPinMsg');
+            const boxes = document.querySelectorAll('.pin-box');
 
             sessionStorage.removeItem('app_unlocked_ju');
             sessionStorage.removeItem('active_tab_ju');
-            passInput.value = '';
+            
+            boxes.forEach(box => box.value = "");
             errorMsg.classList.add('hidden');
             onboarding.style.display = 'flex';
             setTimeout(() => {
                 onboarding.classList.remove('opacity-0');
+                boxes[0].focus();
             }, 10);
-            passInput.focus();
         }
 
         function switchTab(tabName, saveSession = true) {
@@ -406,6 +507,8 @@
         }
 
         let parsedInventoryData = [];
+        let warehouseChartInstance = null;
+        let projectChartInstance = null;
 
         function handleFileSelect(event) {
             const file = event.target.files[0];
@@ -437,26 +540,89 @@
 
             localStorage.setItem('saved_inventory_data_ju', JSON.stringify(parsedInventoryData));
             document.getElementById('deleteInventoryBtn').classList.remove('hidden');
-            renderDashboardUI();
+            initDashboardFiltersAndUI();
         }
 
-        function renderDashboardUI() {
+        function findColumnName(columns, keywords) {
+            for (let kw of keywords) {
+                let found = columns.find(c => c.toLowerCase().includes(kw));
+                if (found) return found;
+            }
+            return null;
+        }
+
+        function initDashboardFiltersAndUI() {
             const container = document.getElementById('inventoryDashboardContainer');
-            const tableHead = document.getElementById('inventoryTableHead');
-            const tableBody = document.getElementById('inventoryTableBody');
-            const statTotalItems = document.getElementById('statTotalItems');
-            const statTotalColumns = document.getElementById('statTotalColumns');
-            const totalRowsBadge = document.getElementById('totalRowsInventoryBadge');
-
             container.classList.remove('hidden');
-
-            statTotalItems.innerText = parsedInventoryData.length;
-            totalRowsBadge.innerText = `${parsedInventoryData.length} Data Tercatat`;
 
             if (parsedInventoryData.length === 0) return;
 
             const columns = Object.keys(parsedInventoryData[0]);
-            statTotalColumns.innerText = columns.length;
+
+            window.colProject = findColumnName(columns, ['project', 'proyek', 'client', 'klien']) || columns[0];
+            window.colWarehouse = findColumnName(columns, ['warehouse', 'gudang', 'lokasi', 'location', 'site']) || columns[1] || columns[0];
+            window.colItem = findColumnName(columns, ['item', 'kode', 'code', 'product', 'nama', 'material']) || columns[2] || columns[0];
+
+            populateDropdown('filterProject', parsedInventoryData, window.colProject);
+            populateDropdown('filterWarehouse', parsedInventoryData, window.colWarehouse);
+            populateDropdown('filterItem', parsedInventoryData, window.colItem);
+
+            applyFiltersAndRender();
+        }
+
+        function populateDropdown(elementId, data, colKey) {
+            const select = document.getElementById(elementId);
+            const currentVal = select.value;
+            select.innerHTML = `<option value="ALL">Semua ${elementId.replace('filter', '')}</option>`;
+
+            let uniqueValues = [...new Set(data.map(item => String(item[colKey] || "").trim()))].filter(Boolean);
+            uniqueValues.sort();
+
+            uniqueValues.forEach(val => {
+                select.innerHTML += `<option value="${val}">${val}</option>`;
+            });
+
+            if (uniqueValues.includes(currentVal)) {
+                select.value = currentVal;
+            }
+        }
+
+        function applyFiltersAndRender() {
+            const projFilter = document.getElementById('filterProject').value;
+            const whFilter = document.getElementById('filterWarehouse').value;
+            const itemFilter = document.getElementById('filterItem').value;
+
+            let filteredData = parsedInventoryData.filter(row => {
+                let matchProj = (projFilter === 'ALL' || String(row[window.colProject]).trim() === projFilter);
+                let matchWh = (whFilter === 'ALL' || String(row[window.colWarehouse]).trim() === whFilter);
+                let matchItem = (itemFilter === 'ALL' || String(row[window.colItem]).trim() === itemFilter);
+                return matchProj && matchWh && matchItem;
+            });
+
+            renderDashboardMetricsAndTable(filteredData);
+            renderCharts(filteredData);
+        }
+
+        function renderDashboardMetricsAndTable(filteredData) {
+            const tableHead = document.getElementById('inventoryTableHead');
+            const tableBody = document.getElementById('inventoryTableBody');
+            const statTotalItems = document.getElementById('statTotalItems');
+            const statTotalQty = document.getElementById('statTotalQty');
+            const totalRowsBadge = document.getElementById('totalRowsInventoryBadge');
+
+            statTotalItems.innerText = filteredData.length;
+            totalRowsBadge.innerText = `${filteredData.length} Data Terfilter (dari ${parsedInventoryData.length} total)`;
+
+            const columns = Object.keys(parsedInventoryData[0]);
+            let qtyCol = findColumnName(columns, ['qty', 'quantity', 'jumlah', 'stok', 'stock', 'vol']);
+            let totalQtySum = 0;
+            if (qtyCol) {
+                filteredData.forEach(row => {
+                    let val = parseFloat(row[qtyCol]);
+                    if (!isNaN(val)) totalQtySum += val;
+                });
+            }
+            statTotalQty.innerText = qtyCol ? totalQtySum.toLocaleString() : "-";
 
             let headHtml = "<tr><th class='p-3'>No.</th>";
             columns.forEach(col => {
@@ -466,7 +632,7 @@
             tableHead.innerHTML = headHtml;
 
             let bodyHtml = "";
-            parsedInventoryData.slice(0, 100).forEach((row, idx) => {
+            filteredData.slice(0, 100).forEach((row, idx) => {
                 bodyHtml += `<tr class="hover:bg-slate-800/50 transition">`;
                 bodyHtml += `<td class="p-3 text-slate-500">${idx + 1}</td>`;
                 columns.forEach(col => {
@@ -475,6 +641,75 @@
                 bodyHtml += `</tr>`;
             });
             tableBody.innerHTML = bodyHtml;
+        }
+
+        function renderCharts(filteredData) {
+            let whCounts = {};
+            filteredData.forEach(row => {
+                let wh = String(row[window.colWarehouse] || 'Unknown').trim();
+                whCounts[wh] = (whCounts[wh] || 0) + 1;
+            });
+
+            let projCounts = {};
+            filteredData.forEach(row => {
+                let proj = String(row[window.colProject] || 'Unknown').trim();
+                projCounts[proj] = (projCounts[proj] || 0) + 1;
+            });
+
+            const ctxWh = document.getElementById('warehouseChart').getContext('2d');
+            if (warehouseChartInstance) warehouseChartInstance.destroy();
+
+            warehouseChartInstance = new Chart(ctxWh, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(whCounts),
+                    datasets: [{
+                        label: 'Jumlah Item per Warehouse',
+                        data: Object.values(whCounts),
+                        backgroundColor: 'rgba(99, 102, 241, 0.7)',
+                        borderColor: 'rgba(99, 102, 241, 1)',
+                        borderWidth: 1,
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { ticks: { color: '#94a3b8', font: { size: 10 } }, grid: { display: false } },
+                        y: { ticks: { color: '#94a3b8', font: { size: 10 } }, grid: { color: 'rgba(51, 65, 85, 0.4)' } }
+                    }
+                }
+            });
+
+            const ctxProj = document.getElementById('projectChart').getContext('2d');
+            if (projectChartInstance) projectChartInstance.destroy();
+
+            projectChartInstance = new Chart(ctxProj, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(projCounts),
+                    datasets: [{
+                        data: Object.values(projCounts),
+                        backgroundColor: [
+                            'rgba(99, 102, 241, 0.8)',
+                            'rgba(139, 92, 246, 0.8)',
+                            'rgba(236, 72, 153, 0.8)',
+                            'rgba(59, 130, 246, 0.8)',
+                            'rgba(16, 185, 129, 0.8)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { color: '#cbd5e1', font: { size: 10 } } }
+                    }
+                }
+            });
         }
 
         function konfirmasiHapusInventory() {
@@ -844,3 +1079,110 @@
 
         function tambahBarisTemplate() {
             let cols = getKolomListFromModal();
+            let nonInputColsCount = cols.filter(c => !c.isInput).length;
+            let container = document.getElementById('rowEditorContainer');
+            
+            let rowHtml = `<div draggable="true" class="sortable-row flex gap-2 items-center bg-slate-900/70 p-2 rounded-xl border border-slate-700 cursor-grab active:cursor-grabbing">
+                <span class="text-slate-500 text-xs font-bold px-1">☰</span>`;
+            for(let i=0; i<nonInputColsCount; i++) {
+                rowHtml += `<input type="text" placeholder="Nilai Template" class="flex-1 bg-slate-800 text-xs text-slate-200 px-2.5 py-1.5 rounded-lg border border-slate-700 row-val-input" />`;
+            }
+            rowHtml += `<button type="button" onclick="hapusBarisEditor(this)" class="text-rose-400 hover:text-rose-300 font-bold px-2">&times;</button></div>`;
+            container.innerHTML += rowHtml;
+            initDragAndDrop();
+        }
+
+        function hapusBarisEditor(btn) {
+            btn.closest('div').remove();
+        }
+
+        function initDragAndDrop() {
+            const container = document.getElementById('rowEditorContainer');
+            const rows = container.querySelectorAll('.sortable-row');
+
+            rows.forEach(row => {
+                row.addEventListener('dragstart', () => row.classList.add('dragging'));
+                row.addEventListener('dragend', () => row.classList.remove('dragging'));
+            });
+
+            container.addEventListener('dragover', e => {
+                e.preventDefault();
+                const afterElement = getDragAfterElement(container, e.clientY);
+                const draggable = container.querySelector('.dragging');
+                if (afterElement == null) {
+                    container.appendChild(draggable);
+                } else {
+                    container.insertBefore(draggable, afterElement);
+                }
+            });
+        }
+
+        function getDragAfterElement(container, y) {
+            const draggableElements = [...container.querySelectorAll('.sortable-row:not(.dragging)')];
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = y - box.top - box.height / 2;
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset: offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+        }
+
+        function buatTemplateBaru() {
+            const newId = 'tmpl_' + Date.now();
+            templates.push({
+                id: newId,
+                nama: "Template Baru",
+                columns: [
+                    { name: "No", isInput: false },
+                    { name: "Kata Kunci", isInput: true },
+                    { name: "Keterangan", isInput: false }
+                ],
+                rows: [["Data Selesai"]]
+            });
+            initDropdowns();
+            document.getElementById('modalTemplateSelect').value = newId;
+            loadTemplateToModal();
+        }
+
+        function simpanTemplate() {
+            const id = document.getElementById('modalTemplateSelect').value;
+            const t = templates.find(x => x.id === id);
+            if (!t) return;
+
+            t.nama = document.getElementById('editNamaTemplate').value.trim() || "Tanpa Nama";
+            t.columns = getKolomListFromModal();
+
+            let newRows = [];
+            const rowDivs = document.querySelectorAll('#rowEditorContainer > div');
+            rowDivs.forEach(div => {
+                let inputs = div.querySelectorAll('.row-val-input');
+                let vals = [];
+                inputs.forEach(inp => vals.push(inp.value.trim()));
+                newRows.push(vals);
+            });
+            t.rows = newRows;
+
+            simpanKeStorage();
+            tutupModalTemplate();
+            alert("Template berhasil disimpan!");
+        }
+
+        function hapusTemplate` + `Aktif() {
+            if (templates.length <= 1) {
+                alert("Minimal harus menyisakan 1 template!");
+                return;
+            }
+            const id = document.getElementById('modalTemplateSelect').value;
+            templates = templates.filter(x => x.id !== id);
+            simpanKeStorage();
+            initDropdowns();
+            tutupModalTemplate();
+        }
+
+        initDropdowns();
+    </script>
+</body>
+</html>
