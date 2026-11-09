@@ -3,11 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome, Juan - Advanced Excel Generator</title>
+    <title>Welcome, Ju - Advanced Excel Generator</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style> body { font-family: 'Inter', sans-serif; } </style>
+    <style> 
+        body { font-family: 'Inter', sans-serif; } 
+        .dragging { opacity: 0.4; background: rgba(99, 102, 241, 0.2); }
+    </style>
 </head>
 <body class="bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-950 min-h-screen text-slate-100 flex flex-col justify-between p-4 sm:p-6">
 
@@ -19,7 +22,7 @@
             </div>
             <div class="space-y-2">
                 <h2 class="text-2xl font-bold text-white">Welcome, Ju!</h2>
-                <p class="text-slate-400 text-sm">Gaskannn material config.</p>
+                <p class="text-slate-400 text-sm">Full Custom & Drag-and-Drop Editor aktif. Atur kolom & baris sesukamu!</p>
             </div>
             <button onclick="mulaiAplikasi()" class="w-full bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-semibold py-3.5 px-6 rounded-2xl shadow-lg shadow-indigo-600/30 transition duration-200 flex items-center justify-center gap-2 cursor-pointer text-base">
                 <span>🚀</span> Helpkan Yuaaaaan
@@ -28,21 +31,21 @@
     </div>
 
     <!-- Header -->
-    <header class="max-w-5xl mx-auto w-full text-center py-4">
+    <header class="max-w-6xl mx-auto w-full text-center py-4">
         <span class="bg-indigo-500/10 text-indigo-400 text-xs font-semibold px-3 py-1 rounded-full border border-indigo-500/20 uppercase tracking-wider">Advanced Edition</span>
         <h1 class="text-3xl sm:text-4xl font-bold tracking-tight mt-3 text-white">Excel Template & Column Builder</h1>
-        <p class="text-slate-400 text-sm mt-1">Input kata masuk ke kolom ke-2, sisanya diatur dari template.</p>
+        <p class="text-slate-400 text-sm mt-1">Atur nama kolom bebas, susun baris dengan drag & drop.</p>
     </header>
 
     <!-- Main Container -->
-    <main class="max-w-5xl mx-auto w-full grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+    <main class="max-w-6xl mx-auto w-full grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
         
         <!-- Panel Kontrol (Kiri) -->
         <div class="bg-slate-800/60 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-6 shadow-xl flex flex-col justify-between space-y-6">
             <div class="space-y-4">
                 <h2 class="text-lg font-semibold text-white border-b border-slate-700 pb-3 flex items-center justify-between">
                     <span>Konfigurasi</span>
-                    <button onclick="bukaModalTemplate()" class="text-xs bg-indigo-600/40 hover:bg-indigo-600 text-indigo-300 hover:text-white px-2.5 py-1 rounded-lg border border-indigo-500/30 transition">+ Edit/Buat Template</button>
+                    <button onclick="bukaModalTemplate()" class="text-xs bg-indigo-600/40 hover:bg-indigo-600 text-indigo-300 hover:text-white px-2.5 py-1 rounded-lg border border-indigo-500/30 transition">+ Edit Template</button>
                 </h2>
 
                 <!-- Pilih Template -->
@@ -55,7 +58,7 @@
 
                 <!-- Input Kata -->
                 <div>
-                    <label class="block text-xs font-medium text-slate-300 uppercase tracking-wider mb-2">Kata / Kode Utama (Masuk ke Kolom 2)</label>
+                    <label class="block text-xs font-medium text-slate-300 uppercase tracking-wider mb-2">Kata / Kode Utama (Masuk ke Kolom ke-2)</label>
                     <input type="text" id="inputKata" oninput="updatePreview()" placeholder="Contoh: PROJEK-A" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition">
                 </div>
 
@@ -97,17 +100,17 @@
 
     </main>
 
-    <!-- Modal Manager Template & Kolom -->
+    <!-- Modal Manager Template (Columns & Drag-Drop Rows) -->
     <div id="templateModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-slate-800 border border-slate-700 rounded-3xl p-6 max-w-xl w-full shadow-2xl space-y-5 max-h-[90vh] overflow-y-auto">
+        <div class="bg-slate-800 border border-slate-700 rounded-3xl p-6 max-w-2xl w-full shadow-2xl space-y-5 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b border-slate-700 pb-3">
-                <h3 class="text-lg font-bold text-white">Kelola & Kustomisasi Template</h3>
+                <h3 class="text-lg font-bold text-white">Kelola Template & Kolom</h3>
                 <button onclick="tutupModalTemplate()" class="text-slate-400 hover:text-white font-bold">&times;</button>
             </div>
 
             <div class="space-y-4">
                 <div>
-                    <label class="block text-xs font-medium text-slate-300 uppercase mb-1">Pilih Template untuk Diedit / Buat Baru</label>
+                    <label class="block text-xs font-medium text-slate-300 uppercase mb-1">Pilih / Buat Template</label>
                     <div class="flex gap-2">
                         <select id="modalTemplateSelect" onchange="loadTemplateToModal()" class="flex-1 bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl px-3 py-2">
                         </select>
@@ -120,16 +123,27 @@
                     <input type="text" id="editNamaTemplate" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl px-3 py-2">
                 </div>
 
-                <!-- Editor Baris & Kolom -->
-                <div class="space-y-3">
+                <!-- Bagian Pengaturan Kolom Header -->
+                <div class="space-y-2">
                     <div class="flex justify-between items-center">
-                        <label class="text-xs font-medium text-slate-300 uppercase">Atur Baris & Kolom Template</label>
-                        <button onclick="tambahBarisTemplate()" class="text-xs bg-indigo-600 hover:bg-indigo-500 text-white px-2.5 py-1.5 rounded-lg">+ Tambah Baris</button>
+                        <label class="text-xs font-medium text-slate-300 uppercase">Daftar Nama Kolom (Minimal 2)</label>
+                        <button onclick="tambahKolomHeader()" class="text-xs bg-indigo-600 hover:bg-indigo-500 text-white px-2.5 py-1 rounded-lg">+ Tambah Kolom</button>
                     </div>
-                    <div id="kolomContainer" class="space-y-2 max-h-48 overflow-y-auto pr-1">
-                        <!-- Dynamic Row Config -->
+                    <div id="columnHeaderContainer" class="flex flex-wrap gap-2 p-2 bg-slate-900/50 rounded-xl border border-slate-700">
+                        <!-- Dynamic Column Names -->
                     </div>
-                    <p class="text-[11px] text-slate-400 italic">Catatan: Kolom ke-2 akan otomatis diisi dengan Kata Utama yang Anda ketik di menu utama.</p>
+                    <p class="text-[11px] text-slate-400 italic">Catatan: Kolom ke-2 selalu otomatis diisi oleh Input Kata utama.</p>
+                </div>
+
+                <!-- Bagian Pengaturan Baris (Drag & Drop Supported) -->
+                <div class="space-y-2">
+                    <div class="flex justify-between items-center">
+                        <label class="text-xs font-medium text-slate-300 uppercase">Atur Baris (Tarik / Drag baris untuk ubah urutan)</label>
+                        <button onclick="tambahBarisTemplate()" class="text-xs bg-indigo-600 hover:bg-indigo-500 text-white px-2.5 py-1 rounded-lg">+ Tambah Baris</button>
+                    </div>
+                    <div id="rowEditorContainer" class="space-y-2 max-h-52 overflow-y-auto pr-1">
+                        <!-- Dynamic Sortable Rows -->
+                    </div>
                 </div>
             </div>
 
@@ -158,28 +172,21 @@
         const defaultTemplates = [
             {
                 id: "tmpl_1",
-                nama: "Template 1: Variasi Kode",
+                nama: "Template 1: Variasi Standar",
+                columns: ["No", "Kode Utama", "Keterangan", "Status"],
                 rows: [
-                    { col1: "Item Awal", col3: "Deskripsi 1", col4: "Aktif" },
-                    { col1: "Item Tengah", col3: "Deskripsi 2", col4: "Pending" },
-                    { col1: "Item Akhir", col3: "Deskripsi 3", col4: "Selesai" }
-                ]
-            },
-            {
-                id: "tmpl_2",
-                nama: "Template 2: Workflow Standar",
-                rows: [
-                    { col1: "Tahap 1", col3: "Setup awal", col4: "Draft" },
-                    { col1: "Tahap 2", col3: "Eksekusi", col4: "Proses" }
+                    ["1", "Deskripsi Awal", "Aktif"],
+                    ["2", "Deskripsi Tengah", "Pending"],
+                    ["3", "Deskripsi Akhir", "Selesai"]
                 ]
             }
         ];
 
-        let templates = JSON.parse(localStorage.getItem('saved_templates_ju_v2')) || defaultTemplates;
+        let templates = JSON.parse(localStorage.getItem('saved_templates_ju_v3')) || defaultTemplates;
         let cachedExcelData = [];
 
         function simpanKeStorage() {
-            localStorage.setItem('saved_templates_ju_v2', JSON.stringify(templates));
+            localStorage.setItem('saved_templates_ju_v3', JSON.stringify(templates));
         }
 
         function initDropdowns() {
@@ -204,7 +211,7 @@
             const currentId = document.getElementById('templateChoice').value;
             const t = templates.find(x => x.id === currentId);
             if (!t) return;
-            document.getElementById('infoTemplateDetail').innerText = `Total Baris Pengaturan: ${t.rows.length} baris (Kolom ke-2 diisi Input Kata).`;
+            document.getElementById('infoTemplateDetail').innerText = `${t.columns.length} Kolom, ${t.rows.length} Baris. (Kolom ke-2: Input Kata).`;
         }
 
         function getDataBaris() {
@@ -214,13 +221,19 @@
 
             if (!inputKata || !t || t.rows.length === 0) return [];
 
-            return t.rows.map((r, idx) => ({
-                "No": idx + 1,
-                "Kolom 1 (Template)": r.col1,
-                "Kolom 2 (Input Kata)": inputKata,
-                "Kolom 3 (Template)": r.col3,
-                "Kolom 4 (Template)": r.col4
-            }));
+            return t.rows.map((rowVal, idx) => {
+                let obj = {};
+                t.columns.forEach((colName, cIdx) => {
+                    if (cIdx === 1) {
+                        obj[colName] = inputKata; // Kolom ke-2 otomatis input kata
+                    } else if (cIdx < 1) {
+                        obj[colName] = rowVal[cIdx] || "";
+                    } else {
+                        obj[colName] = rowVal[cIdx - 1] || "";
+                    }
+                });
+                return obj;
+            });
         }
 
         function updatePreview() {
@@ -229,10 +242,12 @@
             const downloadBtn = document.getElementById('downloadBtn');
             const rowCountBadge = document.getElementById('rowCountBadge');
             const inputKata = document.getElementById('inputKata').value.trim();
+            const currentId = document.getElementById('templateChoice').value;
+            const t = templates.find(x => x.id === currentId);
             
             cachedExcelData = getDataBaris();
 
-            if (!inputKata || cachedExcelData.length === 0) {
+            if (!inputKata || !t || cachedExcelData.length === 0) {
                 previewHead.innerHTML = `<tr><th class="p-3">Info</th></tr>`;
                 previewBody.innerHTML = `<tr><td class="p-8 text-center text-slate-500 italic">Masukkan kata di panel sebelah kiri untuk melihat pratinjau...</td></tr>`;
                 rowCountBadge.innerText = "0 Baris";
@@ -241,29 +256,24 @@
                 return;
             }
 
-            previewHead.innerHTML = `
-                <tr>
-                    <th class="p-3">No</th>
-                    <th class="p-3">Kolom 1</th>
-                    <th class="p-3 text-indigo-400">Kolom 2 (Input)</th>
-                    <th class="p-3">Kolom 3</th>
-                    <th class="p-3">Kolom 4</th>
-                </tr>
-            `;
-
-            let html = "";
-            cachedExcelData.forEach(item => {
-                html += `
-                    <tr class="hover:bg-slate-800/50 transition">
-                        <td class="p-3 text-slate-400">${item["No"]}</td>
-                        <td class="p-3 text-slate-300">${item["Kolom 1 (Template)"]}</td>
-                        <td class="p-3 font-semibold text-white bg-indigo-950/40">${item["Kolom 2 (Input Kata)"]}</td>
-                        <td class="p-3 text-slate-300">${item["Kolom 3 (Template)"]}</td>
-                        <td class="p-3 text-slate-300">${item["Kolom 4 (Template)"]}</td>
-                    </tr>
-                `;
+            let headHtml = "<tr>";
+            t.columns.forEach((col, idx) => {
+                let highlight = idx === 1 ? "text-indigo-400 bg-indigo-950/30" : "";
+                headHtml += `<th class="p-3 ${highlight}">${col} ${idx === 1 ? '(Input)' : ''}</th>`;
             });
-            previewBody.innerHTML = html;
+            headHtml += "</tr>";
+            previewHead.innerHTML = headHtml;
+
+            let bodyHtml = "";
+            cachedExcelData.forEach((item) => {
+                bodyHtml += `<tr class="hover:bg-slate-800/50 transition">`;
+                t.columns.forEach((col, idx) => {
+                    let style = idx === 1 ? "font-semibold text-white bg-indigo-950/40" : "text-slate-300";
+                    bodyHtml += `<td class="p-3 ${style}">${item[col]}</td>`;
+                });
+                bodyHtml += `</tr>`;
+            });
+            previewBody.innerHTML = bodyHtml;
             rowCountBadge.innerText = `${cachedExcelData.length} Baris`;
 
             downloadBtn.className = "w-full bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-3 rounded-xl transition duration-200 shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2 text-sm cursor-pointer";
@@ -279,7 +289,7 @@
 
             const worksheet = XLSX.utils.json_to_sheet(cachedExcelData);
             const workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, "Generated Data");
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
 
             XLSX.writeFile(workbook, `export_${inputKata}_${t ? t.nama.replace(/\s+/g, '_') : 'custom'}.xlsx`);
 
@@ -303,44 +313,154 @@
             if (!t) return;
 
             document.getElementById('editNamaTemplate').value = t.nama;
-            renderEditorBaris(t.rows);
+            renderColumnHeaderEditor(t.columns);
+            renderRowEditor(t.rows, t.columns.length);
         }
 
-        function renderEditorBaris(rows) {
-            const container = document.getElementById('kolomContainer');
+        function renderColumnHeaderEditor(columns) {
+            const container = document.getElementById('columnHeaderContainer');
             container.innerHTML = '';
-            rows.forEach((r, idx) => {
-                container.innerHTML += `
-                    <div class="grid grid-cols-4 gap-2 items-center bg-slate-900/60 p-2 rounded-xl border border-slate-700">
-                        <input type="text" value="${r.col1}" placeholder="Kolom 1" class="bg-slate-800 text-xs text-slate-200 px-2 py-1.5 rounded-lg border border-slate-700 ed-col1" />
-                        <div class="bg-indigo-950/60 text-[11px] text-indigo-300 text-center py-1.5 rounded-lg border border-indigo-500/30 font-mono">⚡ [Input Kata]</div>
-                        <input type="text" value="${r.col3}" placeholder="Kolom 3" class="bg-slate-800 text-xs text-slate-200 px-2 py-1.5 rounded-lg border border-slate-700 ed-col3" />
-                        <div class="flex gap-1">
-                            <input type="text" value="${r.col4}" placeholder="Kolom 4" class="flex-1 bg-slate-800 text-xs text-slate-200 px-2 py-1.5 rounded-lg border border-slate-700 ed-col4" />
-                            <button onclick="hapusBarisEditor(this)" class="text-rose-400 hover:text-rose-300 font-bold px-1.5">&times;</button>
+            columns.forEach((col, idx) => {
+                if (idx === 1) {
+                    container.innerHTML += `<div class="bg-indigo-950/80 border border-indigo-500/40 text-indigo-300 text-xs px-3 py-1.5 rounded-lg flex items-center gap-1 font-mono">⚡ 2. [Input Kata Utama]</div>`;
+                } else {
+                    container.innerHTML += `
+                        <div class="flex items-center gap-1 bg-slate-800 border border-slate-700 px-2.5 py-1 rounded-lg">
+                            <input type="text" value="${col}" class="bg-transparent text-xs text-slate-200 outline-none w-24 col-input" />
+                            <button onclick="hapusKolomHeader(this)" class="text-rose-400 font-bold hover:text-rose-300 px-1">&times;</button>
                         </div>
-                    </div>
-                `;
+                    `;
+                }
             });
         }
 
-        function tambahBarisTemplate() {
-            const container = document.getElementById('kolomContainer');
+        function tambahKolomHeader() {
+            const container = document.getElementById('columnHeaderContainer');
             container.innerHTML += `
-                <div class="grid grid-cols-4 gap-2 items-center bg-slate-900/60 p-2 rounded-xl border border-slate-700">
-                    <input type="text" placeholder="Kolom 1" class="bg-slate-800 text-xs text-slate-200 px-2 py-1.5 rounded-lg border border-slate-700 ed-col1" />
-                    <div class="bg-indigo-950/60 text-[11px] text-indigo-300 text-center py-1.5 rounded-lg border border-indigo-500/30 font-mono">⚡ [Input Kata]</div>
-                    <input type="text" placeholder="Kolom 3" class="bg-slate-800 text-xs text-slate-200 px-2 py-1.5 rounded-lg border border-slate-700 ed-col3" />
-                    <div class="flex gap-1">
-                        <input type="text" placeholder="Kolom 4" class="flex-1 bg-slate-800 text-xs text-slate-200 px-2 py-1.5 rounded-lg border border-slate-700 ed-col4" />
-                        <button onclick="hapusBarisEditor(this)" class="text-rose-400 hover:text-rose-300 font-bold px-1.5">&times;</button>
-                    </div>
+                <div class="flex items-center gap-1 bg-slate-800 border border-slate-700 px-2.5 py-1 rounded-lg">
+                    <input type="text" placeholder="Kolom Baru" class="bg-transparent text-xs text-slate-200 outline-none w-24 col-input" />
+                    <button onclick="hapusKolomHeader(this)" class="text-rose-400 font-bold hover:text-rose-300 px-1">&times;</button>
                 </div>
             `;
+            syncRowsToCurrentColumns();
+        }
+
+        function hapusKolomHeader(btn) {
+            const container = document.getElementById('columnHeaderContainer');
+            if (container.querySelectorAll('.col-input').length <= 1) {
+                alert("Minimal harus ada 1 kolom tambahan selain kolom input kata!");
+                return;
+            }
+            btn.closest('div').remove();
+            syncRowsToCurrentColumns();
+        }
+
+        function getKolomList() {
+            let cols = [];
+            let inputs = document.querySelectorAll('#columnHeaderContainer .col-input');
+            let inputIdx = 0;
+            // Rekonstruksi urutan kolom termasuk posisi tetap input kata di indeks ke-1
+            let totalVisualCols = document.querySelectorAll('#columnHeaderContainer > div').length;
+            for(let i=0; i<totalVisualCols; i++) {
+                if(i === 1) {
+                    cols.push("Input Kata");
+                } else {
+                    if(inputs[inputIdx]) cols.push(inputs[inputIdx].value.trim() || "Kolom");
+                    inputIdx++;
+                }
+            }
+            return cols;
+        }
+
+        function renderRowEditor(rows, colCount) {
+            const container = document.getElementById('rowEditorContainer');
+            container.innerHTML = '';
+            let nonInputColCount = Math.max(1, colCount - 1);
+
+            rows.forEach((rowVals) => {
+                let rowHtml = `<div draggable="true" class="sortable-row flex gap-2 items-center bg-slate-900/70 p-2 rounded-xl border border-slate-700 cursor-grab active:cursor-grabbing">
+                    <span class="text-slate-500 text-xs font-bold px-1">☰</span>`;
+                
+                for(let i=0; i<nonInputColCount; i++) {
+                    let val = rowVals[i] || "";
+                    rowHtml += `<input type="text" value="${val}" placeholder="Val" class="flex-1 bg-slate-800 text-xs text-slate-200 px-2 py-1.5 rounded-lg border border-slate-700 row-val-input" />`;
+                }
+                rowHtml += `<button onclick="hapusBarisEditor(this)" class="text-rose-400 hover:text-rose-300 font-bold px-2">&times;</button></div>`;
+                container.innerHTML += rowHtml;
+            });
+            initDragAndDrop();
+        }
+
+        function syncRowsToCurrentColumns() {
+            // Mempertahankan data baris saat kolom ditambah/dikurangi
+            let cols = getKolomList();
+            let rowElements = document.querySelectorAll('#rowEditorContainer > div');
+            let currentRowsData = [];
+            rowElements.forEach(div => {
+                let inputs = div.querySelectorAll('.row-val-input');
+                let vals = [];
+                inputs.forEach(inp => vals.push(inp.value));
+                currentRowsData.push(vals);
+            });
+            renderRowEditor(currentRowsData, cols.length);
+        }
+
+        function tambahBarisTemplate() {
+            let cols = getKolomList();
+            let nonInputColCount = Math.max(1, cols.length - 1);
+            let container = document.getElementById('rowEditorContainer');
+            
+            let rowHtml = `<div draggable="true" class="sortable-row flex gap-2 items-center bg-slate-900/70 p-2 rounded-xl border border-slate-700 cursor-grab active:cursor-grabbing">
+                <span class="text-slate-500 text-xs font-bold px-1">☰</span>`;
+            for(let i=0; i<nonInputColCount; i++) {
+                rowHtml += `<input type="text" placeholder="Val" class="flex-1 bg-slate-800 text-xs text-slate-200 px-2 py-1.5 rounded-lg border border-slate-700 row-val-input" />`;
+            }
+            rowHtml += `<button onclick="hapusBarisEditor(this)" class="text-rose-400 hover:text-rose-300 font-bold px-2">&times;</button></div>`;
+            container.innerHTML += rowHtml;
+            initDragAndDrop();
         }
 
         function hapusBarisEditor(btn) {
-            btn.closest('div.grid').remove();
+            btn.closest('div').remove();
+        }
+
+        // HTML5 Drag & Drop Logic untuk Baris
+        function initDragAndDrop() {
+            const container = document.getElementById('rowEditorContainer');
+            const rows = container.querySelectorAll('.sortable-row');
+
+            rows.forEach(row => {
+                row.addEventListener('dragstart', () => {
+                    row.classList.add('dragging');
+                });
+                row.addEventListener('dragend', () => {
+                    row.classList.remove('dragging');
+                });
+            });
+
+            container.addEventListener('dragover', e => {
+                e.preventDefault();
+                const afterElement = getDragAfterElement(container, e.clientY);
+                const draggable = container.querySelector('.dragging');
+                if (afterElement == null) {
+                    container.appendChild(draggable);
+                } else {
+                    container.insertBefore(draggable, afterElement);
+                }
+            });
+        }
+
+        function getDragAfterElement(container, y) {
+            const draggableElements = [...container.querySelectorAll('.sortable-row:not(.dragging)')];
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = y - box.top - box.height / 2;
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset: offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
         }
 
         function buatTemplateBaru() {
@@ -348,7 +468,8 @@
             templates.push({
                 id: newId,
                 nama: "Template Baru",
-                rows: [{ col1: "Data 1", col3: "Data 3", col4: "Data 4" }]
+                columns: ["No", "Input Kata", "Keterangan"],
+                rows: [["Data 1", "Selesai"]]
             });
             initDropdowns();
             document.getElementById('modalTemplateSelect').value = newId;
@@ -361,14 +482,15 @@
             if (!t) return;
 
             t.nama = document.getElementById('editNamaTemplate').value.trim() || "Tanpa Nama";
-            
+            t.columns = getKolomList();
+
             let newRows = [];
-            const rowElements = document.querySelectorAll('#kolomContainer > div.grid');
-            rowElements.forEach(div => {
-                const col1 = div.querySelector('.ed-col1').value.trim();
-                const col3 = div.querySelector('.ed-col3').value.trim();
-                const col4 = div.querySelector('.ed-col4').value.trim();
-                newRows.push({ col1, col3, col4 });
+            const rowDivs = document.querySelectorAll('#rowEditorContainer > div');
+            rowDivs.forEach(div => {
+                let inputs = div.querySelectorAll('.row-val-input');
+                let vals = [];
+                inputs.forEach(inp => vals.push(inp.value.trim()));
+                newRows.push(vals);
             });
             t.rows = newRows;
 
