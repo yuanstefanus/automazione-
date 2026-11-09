@@ -15,7 +15,7 @@
 <body class="bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-950 min-h-screen text-slate-100 flex flex-col justify-between p-4 sm:p-6 relative">
 
     <!-- Tombol Lock di Kanan Atas -->
-    <button onclick="kunciAplikasi()" title="Kunci Aplikasi" class="absolute top-4 right-4 sm:top-6 sm:right-6 bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white p-2.5 rounded-xl border border-slate-700 shadow-lg transition duration-200 flex items-center gap-2 text-xs font-medium z-40">
+    <button onclick="kunciAplikasi()" title="Kunci Aplikasi" class="absolute top-4 right-4 sm:top-6 sm:right-6 bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white p-2.5 rounded-xl border border-slate-700 shadow-lg transition duration-200 flex items-center gap-2 text-xs font-medium z-40 cursor-pointer">
         <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
         </svg>
@@ -40,7 +40,7 @@
                 <p id="errorPasswordMsg" class="text-rose-400 text-xs text-center hidden font-medium">Password salah! Silakan coba lagi.</p>
             </div>
 
-            <button onclick="verifikasiPassword()" class="w-full bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-semibold py-3.5 px-6 rounded-2xl shadow-lg shadow-indigo-600/30 transition duration-200 flex items-center justify-center gap-2 cursor-pointer text-base">
+            <button type="button" onclick="verifikasiPassword()" class="w-full bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-semibold py-3.5 px-6 rounded-2xl shadow-lg shadow-indigo-600/30 transition duration-200 flex items-center justify-center gap-2 cursor-pointer text-base">
                 <span>🚀</span> Helpkan Yuaaaaan
             </button>
         </div>
@@ -49,7 +49,7 @@
     <!-- Header -->
     <header class="max-w-6xl mx-auto w-full text-center py-4 pr-12 sm:pr-0">
         <span class="bg-indigo-500/10 text-indigo-400 text-xs font-semibold px-3 py-1 rounded-full border border-indigo-500/20 uppercase tracking-wider">Advanced Edition</span>
-        <h1 class="text-3xl sm:text-4xl font-bold tracking-tight mt-3 text-white">Excel Template & Column Builder</h1>
+        <h1 class="text-3xl sm:text-4xl font-bold tracking-tight mt-3 text-white">HW CN EQPT</h1>
         <p class="text-slate-400 text-sm mt-1">Multi-kata spasi otomatis jadi baris incremental berurutan.</p>
     </header>
 
@@ -60,7 +60,7 @@
         <div class="bg-slate-800/60 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-6 shadow-xl flex flex-col justify-between space-y-6">
             <div class="space-y-4">
                 <h2 class="text-lg font-semibold text-white border-b border-slate-700 pb-3 flex items-center justify-between">
-                    <span>Konfigurasi</span>
+                    <span>Configure</span>
                     <button onclick="bukaModalTemplate()" class="text-xs bg-indigo-600/40 hover:bg-indigo-600 text-indigo-300 hover:text-white px-2.5 py-1 rounded-lg border border-indigo-500/30 transition">+ Edit Template</button>
                 </h2>
 
@@ -75,7 +75,7 @@
                 <!-- Input Kata -->
                 <div>
                     <label class="block text-xs font-medium text-slate-300 uppercase tracking-wider mb-2" id="inputLabelTitle">Kata / Kode Utama (Pisah dengan spasi)</label>
-                    <textarea rows="2" id="inputKata" oninput="updatePreview()" placeholder="Contoh: ItemA ItemB ItemC" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl p-3 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition resize-none"></textarea>
+                    <textarea rows="2" id="inputKata" oninput="handleInputWithRedundancyCheck()" placeholder="Contoh: ItemA ItemB ItemC" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl p-3 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition resize-none"></textarea>
                     <p class="text-[10px] text-slate-400 mt-1">Setiap kata yang dipisah spasi akan men-generate ulang seluruh baris template secara berurutan.</p>
                 </div>
 
@@ -116,6 +116,35 @@
         </div>
 
     </main>
+
+    <!-- Modal Validasi Redundansi Kata -->
+    <div id="redundancyModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-800 border border-slate-700 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4 text-center">
+            <div class="w-14 h-14 bg-amber-500/10 border border-amber-500/20 rounded-2xl mx-auto flex items-center justify-center text-2xl shadow-inner">
+                ⚠️
+            </div>
+            <div class="space-y-1">
+                <h3 class="text-lg font-bold text-white">Peringatan Kata Ganda (Redundansi)</h3>
+                <p class="text-slate-400 text-xs">Ditemukan beberapa kata yang sama berulang kali di kolom input:</p>
+            </div>
+
+            <!-- Daftar Kata Double -->
+            <div id="redundantWordList" class="bg-slate-900/80 border border-slate-700/60 rounded-xl p-3 text-left max-h-36 overflow-y-auto text-xs text-amber-300 space-y-1">
+                <!-- Daftar item kata double -->
+            </div>
+
+            <p class="text-[11px] text-slate-400 italic">Apakah Anda ingin kembali untuk memperbaiki, atau tetap melanjutkan?</p>
+
+            <div class="flex gap-3 pt-2">
+                <button onclick="handleRedundancyKembali()" class="flex-1 px-4 py-2.5 bg-slate-700 hover:bg-slate-600 text-white text-xs rounded-xl font-medium transition cursor-pointer">
+                    Kembali
+                </button>
+                <button onclick="handleRedundancyLanjutkan()" class="flex-1 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs rounded-xl font-semibold transition cursor-pointer shadow-lg shadow-indigo-600/30">
+                    Lanjutkan
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- Modal Manager Template -->
     <div id="templateModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
@@ -180,6 +209,15 @@
 
     <!-- Script Logika -->
     <script>
+        // Cek status login saat halaman pertama kali dimuat atau di-refresh
+        window.addEventListener('DOMContentLoaded', () => {
+            const isUnlocked = sessionStorage.getItem('app_unlocked_ju');
+            const onboarding = document.getElementById('onboardingScreen');
+            if (isUnlocked === 'true') {
+                onboarding.style.display = 'none';
+            }
+        });
+
         function verifikasiPassword() {
             const passInput = document.getElementById('inputPassword').value;
             const errorMsg = document.getElementById('errorPasswordMsg');
@@ -187,6 +225,7 @@
 
             if (passInput === "D@vincicode6969") {
                 errorMsg.classList.add('hidden');
+                sessionStorage.setItem('app_unlocked_ju', 'true');
                 onboarding.classList.add('opacity-0');
                 setTimeout(() => {
                     onboarding.style.display = 'none';
@@ -203,19 +242,82 @@
             }
         }
 
-        // Fungsi untuk mengunci kembali aplikasi dan menampilkan onboarding
         function kunciAplikasi() {
             const onboarding = document.getElementById('onboardingScreen');
             const passInput = document.getElementById('inputPassword');
             const errorMsg = document.getElementById('errorPasswordMsg');
 
-            passInput.value = ''; // Kosongkan input password
-            errorMsg.classList.add('hidden'); // Sembunyikan pesan error jika ada
+            sessionStorage.removeItem('app_unlocked_ju');
+            passInput.value = '';
+            errorMsg.classList.add('hidden');
             onboarding.style.display = 'flex';
             setTimeout(() => {
                 onboarding.classList.remove('opacity-0');
             }, 10);
             passInput.focus();
+        }
+
+        // Variabel kontrol status peringatan redundansi agar tidak spam modal terus menerus saat mengetik
+        let userBypassedRedundancy = false;
+        let lastRawInputLength = 0;
+
+        function handleInputWithRedundancyCheck() {
+            const rawInput = document.getElementById('inputKata').value;
+            
+            // Jika user menghapus teks, reset status bypass
+            if (rawInput.length < lastRawInputLength) {
+                userBypassedRedundancy = false;
+            }
+            lastRawInputLength = rawInput.length;
+
+            const kataList = rawInput.trim().split(/\s+/).filter(Boolean);
+
+            // Deteksi kata duplikat
+            let wordCounts = {};
+            let duplicates = [];
+            kataList.forEach(kata => {
+                wordCounts[kata] = (wordCounts[kata] || 0) + 1;
+            });
+
+            for (let kata in wordCounts) {
+                if (wordCounts[kata] > 1) {
+                    duplicates.push({ kata: kata, count: wordCounts[kata] });
+                }
+            }
+
+            // Jika ada kata double dan user belum memilih "Lanjutkan"
+            if (duplicates.length > 0 && !userBypassedRedundancy) {
+                showRedundancyModal(duplicates);
+            } else {
+                updatePreview();
+            }
+        }
+
+        function showRedundancyModal(duplicates) {
+            const listContainer = document.getElementById('redundantWordList');
+            listContainer.innerHTML = '';
+
+            duplicates.forEach(item => {
+                listContainer.innerHTML += `<div class="flex justify-between items-center bg-slate-950/40 px-2.5 py-1.5 rounded-lg border border-amber-500/20">
+                    <span>🔑 <strong class="text-white">${item.kata}</strong></span>
+                    <span class="bg-amber-500/20 text-amber-300 text-[10px] px-2 py-0.5 rounded-full font-semibold">Muncul ${item.count}x</span>
+                </div>`;
+            });
+
+            document.getElementById('redundancyModal').classList.remove('hidden');
+        }
+
+        function handleRedundancyKembali() {
+            // Tombol Kembali: Sembunyikan modal dan fokus ke textarea input
+            document.getElementById('redundancyModal').classList.add('hidden');
+            document.getElementById('inputKata').focus();
+        }
+
+        function handleRedundancyLanjutkan() {
+            // Tombol Lanjutkan: Tandai bypass aktif, tutup modal, dan lanjutkan update preview
+            userBypassedRedundancy = true;
+            document.getElementById('redundancyModal').classList.add('hidden');
+            updatePreview();
         }
 
         const defaultTemplates = [
