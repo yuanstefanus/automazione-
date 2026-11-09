@@ -68,7 +68,7 @@
     <!-- Main Container -->
     <main class="max-w-6xl mx-auto w-full mb-8">
         
-        <!-- SECTION 1: CONFIGURE (Halaman Generator Excel Lama) -->
+        <!-- SECTION 1: CONFIGURE -->
         <div id="sectionConfigure" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <!-- Panel Kontrol (Kiri) -->
             <div class="bg-slate-800/60 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-6 shadow-xl flex flex-col justify-between space-y-6">
@@ -130,12 +130,18 @@
             </div>
         </div>
 
-        <!-- SECTION 2: INVENTORY DATA & DASHBOARD (Baru) -->
+        <!-- SECTION 2: INVENTORY DATA & DASHBOARD -->
         <div id="sectionInventory" class="hidden space-y-6">
             <div class="bg-slate-800/60 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-6 shadow-xl space-y-5 max-w-2xl mx-auto">
-                <div class="border-b border-slate-700 pb-3">
-                    <h2 class="text-lg font-semibold text-white">Upload File Inventory Data</h2>
-                    <p class="text-slate-400 text-xs mt-0.5">Pilih file Excel (.xlsx, .xls) atau CSV untuk dianalisis dan digenerate menjadi dashboard.</p>
+                <div class="border-b border-slate-700 pb-3 flex justify-between items-center">
+                    <div>
+                        <h2 class="text-lg font-semibold text-white">Upload File Inventory Data</h2>
+                        <p class="text-slate-400 text-xs mt-0.5">Pilih file Excel (.xlsx, .xls) atau CSV untuk dianalisis.</p>
+                    </div>
+                    <!-- Tombol Hapus Data Inventory -->
+                    <button onclick="konfirmasiHapusInventory()" id="deleteInventoryBtn" class="hidden text-xs bg-rose-600/30 text-rose-400 hover:bg-rose-600 hover:text-white px-3 py-1.5 rounded-xl transition cursor-pointer font-medium">
+                        🗑️ Hapus Data
+                    </button>
                 </div>
 
                 <!-- Area Input File -->
@@ -156,7 +162,7 @@
                 </button>
             </div>
 
-            <!-- Dashboard Result Container (Hidden sebelum digenerate) -->
+            <!-- Dashboard Result Container -->
             <div id="inventoryDashboardContainer" class="hidden space-y-6">
                 <div class="flex items-center justify-between border-b border-slate-700 pb-3">
                     <h3 class="text-xl font-bold text-white flex items-center gap-2">📈 Ringkasan Dashboard Inventory</h3>
@@ -197,6 +203,27 @@
         </div>
 
     </main>
+
+    <!-- Modal Konfirmasi Hapus Data Inventory -->
+    <div id="deleteConfirmModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-800 border border-slate-700 rounded-3xl p-6 max-w-sm w-full shadow-2xl space-y-4 text-center">
+            <div class="w-14 h-14 bg-rose-500/10 border border-rose-500/20 rounded-2xl mx-auto flex items-center justify-center text-2xl shadow-inner">
+                🗑️
+            </div>
+            <div class="space-y-1">
+                <h3 class="text-lg font-bold text-white">Hapus Data Inventory?</h3>
+                <p class="text-slate-400 text-xs">Apakah Anda yakin ingin menghapus data inventory dan dashboard yang tersimpan?</p>
+            </div>
+            <div class="flex gap-3 pt-2">
+                <button onclick="tutupKonfirmasiHapus()" class="flex-1 px-4 py-2.5 bg-slate-700 hover:bg-slate-600 text-white text-xs rounded-xl font-medium transition cursor-pointer">
+                    Tidak (Kembali)
+                </button>
+                <button onclick="eksekusiHapusInventory()" class="flex-1 px-4 py-2.5 bg-rose-600 hover:bg-rose-500 text-white text-xs rounded-xl font-semibold transition cursor-pointer shadow-lg shadow-rose-600/30">
+                    Ya, Hapus
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- Modal Validasi Redundansi Kata -->
     <div id="redundancyModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
@@ -296,6 +323,23 @@
             if (isUnlocked === 'true') {
                 onboarding.style.display = 'none';
             }
+
+            const savedTab = sessionStorage.getItem('active_tab_ju') || 'configure';
+            switchTab(savedTab, false);
+
+            const savedInventory = localStorage.getItem('saved_inventory_data_ju');
+            if (savedInventory) {
+                try {
+                    parsedInventoryData = JSON.parse(savedInventory);
+                    if (parsedInventoryData.length > 0) {
+                        document.getElementById('fileLabelName').innerText = `📄 Inventory_Data_Saved.xlsx`;
+                        document.getElementById('deleteInventoryBtn').classList.remove('hidden');
+                        renderDashboardUI();
+                    }
+                } catch(e) {
+                    console.error("Gagal memuat inventory tersimpan", e);
+                }
+            }
         });
 
         function verifikasiPassword() {
@@ -328,6 +372,7 @@
             const errorMsg = document.getElementById('errorPasswordMsg');
 
             sessionStorage.removeItem('app_unlocked_ju');
+            sessionStorage.removeItem('active_tab_ju');
             passInput.value = '';
             errorMsg.classList.add('hidden');
             onboarding.style.display = 'flex';
@@ -337,12 +382,15 @@
             passInput.focus();
         }
 
-        // Fungsi Switch Tab Navbar (Configure vs Inventory Data)
-        function switchTab(tabName) {
+        function switchTab(tabName, saveSession = true) {
             const secConfigure = document.getElementById('sectionConfigure');
             const secInventory = document.getElementById('sectionInventory');
             const navConfigure = document.getElementById('navConfigure');
             const navInventory = document.getElementById('navInventory');
+
+            if (saveSession) {
+                sessionStorage.setItem('active_tab_ju', tabName);
+            }
 
             if (tabName === 'configure') {
                 secConfigure.classList.remove('hidden');
@@ -357,7 +405,6 @@
             }
         }
 
-        // Variabel untuk Inventory Data & Dashboard
         let parsedInventoryData = [];
 
         function handleFileSelect(event) {
@@ -388,6 +435,12 @@
                 return;
             }
 
+            localStorage.setItem('saved_inventory_data_ju', JSON.stringify(parsedInventoryData));
+            document.getElementById('deleteInventoryBtn').classList.remove('hidden');
+            renderDashboardUI();
+        }
+
+        function renderDashboardUI() {
             const container = document.getElementById('inventoryDashboardContainer');
             const tableHead = document.getElementById('inventoryTableHead');
             const tableBody = document.getElementById('inventoryTableBody');
@@ -397,14 +450,14 @@
 
             container.classList.remove('hidden');
 
-            // Hitung statistik
             statTotalItems.innerText = parsedInventoryData.length;
             totalRowsBadge.innerText = `${parsedInventoryData.length} Data Tercatat`;
+
+            if (parsedInventoryData.length === 0) return;
 
             const columns = Object.keys(parsedInventoryData[0]);
             statTotalColumns.innerText = columns.length;
 
-            // Render Header Tabel
             let headHtml = "<tr><th class='p-3'>No.</th>";
             columns.forEach(col => {
                 headHtml += `<th class="p-3">${col}</th>`;
@@ -412,7 +465,6 @@
             headHtml += "</tr>";
             tableHead.innerHTML = headHtml;
 
-            // Render Isi Baris Tabel (Maksimal 100 baris pertama untuk preview performa optimal)
             let bodyHtml = "";
             parsedInventoryData.slice(0, 100).forEach((row, idx) => {
                 bodyHtml += `<tr class="hover:bg-slate-800/50 transition">`;
@@ -423,9 +475,29 @@
                 bodyHtml += `</tr>`;
             });
             tableBody.innerHTML = bodyHtml;
+        }
 
-            // Scroll otomatis ke bagian dashboard di bawahnya
-            container.scrollIntoView({ behavior: 'smooth' });
+        function konfirmasiHapusInventory() {
+            document.getElementById('deleteConfirmModal').classList.remove('hidden');
+        }
+
+        function tutupKonfirmasiHapus() {
+            document.getElementById('deleteConfirmModal').classList.add('hidden');
+        }
+
+        function eksekusiHapusInventory() {
+            parsedInventoryData = [];
+            localStorage.removeItem('saved_inventory_data_ju');
+            document.getElementById('inventoryDashboardContainer').classList.add('hidden');
+            document.getElementById('deleteInventoryBtn').classList.add('hidden');
+            document.getElementById('fileLabelName').innerText = "Klik untuk browse atau seret file ke sini";
+            document.getElementById('inventoryFileInput').value = "";
+            
+            const generateBtn = document.getElementById('generateDashboardBtn');
+            generateBtn.disabled = true;
+            generateBtn.className = "w-full bg-indigo-600/50 text-slate-400 font-medium py-3 rounded-xl transition duration-200 shadow-lg cursor-not-allowed flex items-center justify-center gap-2 text-sm";
+
+            tutupKonfirmasiHapus();
         }
 
         let userBypassedRedundancy = false;
@@ -772,110 +844,3 @@
 
         function tambahBarisTemplate() {
             let cols = getKolomListFromModal();
-            let nonInputColsCount = cols.filter(c => !c.isInput).length;
-            let container = document.getElementById('rowEditorContainer');
-            
-            let rowHtml = `<div draggable="true" class="sortable-row flex gap-2 items-center bg-slate-900/70 p-2 rounded-xl border border-slate-700 cursor-grab active:cursor-grabbing">
-                <span class="text-slate-500 text-xs font-bold px-1">☰</span>`;
-            for(let i=0; i<nonInputColsCount; i++) {
-                rowHtml += `<input type="text" placeholder="Nilai Template" class="flex-1 bg-slate-800 text-xs text-slate-200 px-2.5 py-1.5 rounded-lg border border-slate-700 row-val-input" />`;
-            }
-            rowHtml += `<button type="button" onclick="hapusBarisEditor(this)" class="text-rose-400 hover:text-rose-300 font-bold px-2">&times;</button></div>`;
-            container.innerHTML += rowHtml;
-            initDragAndDrop();
-        }
-
-        function hapusBarisEditor(btn) {
-            btn.closest('div').remove();
-        }
-
-        function initDragAndDrop() {
-            const container = document.getElementById('rowEditorContainer');
-            const rows = container.querySelectorAll('.sortable-row');
-
-            rows.forEach(row => {
-                row.addEventListener('dragstart', () => row.classList.add('dragging'));
-                row.addEventListener('dragend', () => row.classList.remove('dragging'));
-            });
-
-            container.addEventListener('dragover', e => {
-                e.preventDefault();
-                const afterElement = getDragAfterElement(container, e.clientY);
-                const draggable = container.querySelector('.dragging');
-                if (afterElement == null) {
-                    container.appendChild(draggable);
-                } else {
-                    container.insertBefore(draggable, afterElement);
-                }
-            });
-        }
-
-        function getDragAfterElement(container, y) {
-            const draggableElements = [...container.querySelectorAll('.sortable-row:not(.dragging)')];
-            return draggableElements.reduce((closest, child) => {
-                const box = child.getBoundingClientRect();
-                const offset = y - box.top - box.height / 2;
-                if (offset < 0 && offset > closest.offset) {
-                    return { offset: offset, element: child };
-                } else {
-                    return closest;
-                }
-            }, { offset: Number.NEGATIVE_INFINITY }).element;
-        }
-
-        function buatTemplateBaru() {
-            const newId = 'tmpl_' + Date.now();
-            templates.push({
-                id: newId,
-                nama: "Template Baru",
-                columns: [
-                    { name: "No", isInput: false },
-                    { name: "Kata Kunci", isInput: true },
-                    { name: "Keterangan", isInput: false }
-                ],
-                rows: [["Data Selesai"]]
-            });
-            initDropdowns();
-            document.getElementById('modalTemplateSelect').value = newId;
-            loadTemplateToModal();
-        }
-
-        function simpanTemplate() {
-            const id = document.getElementById('modalTemplateSelect').value;
-            const t = templates.find(x => x.id === id);
-            if (!t) return;
-
-            t.nama = document.getElementById('editNamaTemplate').value.trim() || "Tanpa Nama";
-            t.columns = getKolomListFromModal();
-
-            let newRows = [];
-            const rowDivs = document.querySelectorAll('#rowEditorContainer > div');
-            rowDivs.forEach(div => {
-                let inputs = div.querySelectorAll('.row-val-input');
-                let vals = [];
-                inputs.forEach(inp => vals.push(inp.value.trim()));
-                newRows.push(vals);
-            });
-            t.rows = newRows;
-
-            simpanKeStorage();
-            tutupModalTemplate();
-            alert("Template berhasil disimpan!");
-        }
-
-        function hapusTemplateAktif() {
-            if (templates.length <= 1) {
-                alert("Minimal harus menyisakan 1 template!");
-                return;
-            }
-            const id = document.getElementById('modalTemplateSelect').value;
-            templates = templates.filter(x => x.id !== id);
-            simpanKeStorage();
-            initDropdowns();
-            tutupModalTemplate();
-        }
-
-        initDropdowns();
-    </script>
-</body>
-</html>
