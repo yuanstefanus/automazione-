@@ -48,9 +48,9 @@
 
     <!-- Header -->
     <header class="max-w-6xl mx-auto w-full text-center py-4 pr-12 sm:pr-0">
-        <span class="bg-indigo-500/10 text-indigo-400 text-xs font-semibold px-3 py-1 rounded-full border border-indigo-500/20 uppercase tracking-wider">Advanced Edition</span>
-        <h1 class="text-3xl sm:text-4xl font-bold tracking-tight mt-3 text-white">HW CN EQPT</h1>
-        <p class="text-slate-400 text-sm mt-1">Multi-kata spasi otomatis jadi baris incremental berurutan.</p>
+        <span class="bg-indigo-500/10 text-indigo-400 text-xs font-semibold px-3 py-1 rounded-full border border-indigo-500/20 uppercase tracking-wider">v1.0</span>
+        <h1 class="text-3xl sm:text-4xl font-bold tracking-tight mt-3 text-white">You One</h1>
+        <p class="text-slate-400 text-sm mt-1">hmmm, mau buat apa yah</p>
     </header>
 
     <!-- Main Container -->
@@ -209,7 +209,6 @@
 
     <!-- Script Logika -->
     <script>
-        // Cek status login saat halaman pertama kali dimuat atau di-refresh
         window.addEventListener('DOMContentLoaded', () => {
             const isUnlocked = sessionStorage.getItem('app_unlocked_ju');
             const onboarding = document.getElementById('onboardingScreen');
@@ -257,14 +256,12 @@
             passInput.focus();
         }
 
-        // Variabel kontrol status peringatan redundansi agar tidak spam modal terus menerus saat mengetik
         let userBypassedRedundancy = false;
         let lastRawInputLength = 0;
 
         function handleInputWithRedundancyCheck() {
             const rawInput = document.getElementById('inputKata').value;
             
-            // Jika user menghapus teks, reset status bypass
             if (rawInput.length < lastRawInputLength) {
                 userBypassedRedundancy = false;
             }
@@ -272,7 +269,6 @@
 
             const kataList = rawInput.trim().split(/\s+/).filter(Boolean);
 
-            // Deteksi kata duplikat
             let wordCounts = {};
             let duplicates = [];
             kataList.forEach(kata => {
@@ -285,7 +281,6 @@
                 }
             }
 
-            // Jika ada kata double dan user belum memilih "Lanjutkan"
             if (duplicates.length > 0 && !userBypassedRedundancy) {
                 showRedundancyModal(duplicates);
             } else {
@@ -308,13 +303,11 @@
         }
 
         function handleRedundancyKembali() {
-            // Tombol Kembali: Sembunyikan modal dan fokus ke textarea input
             document.getElementById('redundancyModal').classList.add('hidden');
             document.getElementById('inputKata').focus();
         }
 
         function handleRedundancyLanjutkan() {
-            // Tombol Lanjutkan: Tandai bypass aktif, tutup modal, dan lanjutkan update preview
             userBypassedRedundancy = true;
             document.getElementById('redundancyModal').classList.add('hidden');
             updatePreview();
