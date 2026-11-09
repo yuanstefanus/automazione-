@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome, Ju - Advanced Excel Generator</title>
+    <title>Welcome, Juan - Advanced Excel Generator</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -11,16 +11,18 @@
 </head>
 <body class="bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-950 min-h-screen text-slate-100 flex flex-col justify-between p-4 sm:p-6">
 
-    <!-- Halaman Onboarding -->
+    <!-- Halaman Onboarding dengan Ikon Roket 🚀 -->
     <div id="onboardingScreen" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 transition-opacity duration-300">
         <div class="bg-slate-800 border border-slate-700/80 rounded-3xl p-8 max-w-md w-full text-center shadow-2xl space-y-6">
-            <div class="w-16 h-16 bg-indigo-500/10 border border-indigo-500/20 rounded-2xl mx-auto flex items-center justify-center text-3xl shadow-inner">⚡</div>
+            <div class="w-16 h-16 bg-indigo-500/10 border border-indigo-500/20 rounded-2xl mx-auto flex items-center justify-center text-3xl shadow-inner">
+                🚀
+            </div>
             <div class="space-y-2">
                 <h2 class="text-2xl font-bold text-white">Welcome, Ju!</h2>
-                <p class="text-slate-400 text-sm">Versi advanced siap pakai. Atur kolom, simpan template kustom, dan generate Excel sesukamu.</p>
+                <p class="text-slate-400 text-sm">Gaskannn material config.</p>
             </div>
             <button onclick="mulaiAplikasi()" class="w-full bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-semibold py-3.5 px-6 rounded-2xl shadow-lg shadow-indigo-600/30 transition duration-200 flex items-center justify-center gap-2 cursor-pointer text-base">
-                <span>🥺👉👈</span> Helpkan Yuaaaaan
+                <span>🚀</span> Helpkan Yuaaaaan
             </button>
         </div>
     </div>
@@ -29,7 +31,7 @@
     <header class="max-w-5xl mx-auto w-full text-center py-4">
         <span class="bg-indigo-500/10 text-indigo-400 text-xs font-semibold px-3 py-1 rounded-full border border-indigo-500/20 uppercase tracking-wider">Advanced Edition</span>
         <h1 class="text-3xl sm:text-4xl font-bold tracking-tight mt-3 text-white">Excel Template & Column Builder</h1>
-        <p class="text-slate-400 text-sm mt-1">Atur struktur kolom, kustomisasi template, dan ekspor instan.</p>
+        <p class="text-slate-400 text-sm mt-1">Input kata masuk ke kolom ke-2, sisanya diatur dari template.</p>
     </header>
 
     <!-- Main Container -->
@@ -53,13 +55,13 @@
 
                 <!-- Input Kata -->
                 <div>
-                    <label class="block text-xs font-medium text-slate-300 uppercase tracking-wider mb-2">Kata / Kode Utama</label>
+                    <label class="block text-xs font-medium text-slate-300 uppercase tracking-wider mb-2">Kata / Kode Utama (Masuk ke Kolom 2)</label>
                     <input type="text" id="inputKata" oninput="updatePreview()" placeholder="Contoh: PROJEK-A" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition">
                 </div>
 
                 <!-- Info Template Aktif -->
                 <div class="bg-slate-900/40 border border-slate-700/40 rounded-xl p-3 text-xs text-slate-400 space-y-1">
-                    <p class="font-semibold text-slate-300">Struktur Template Saat Ini:</p>
+                    <p class="font-semibold text-slate-300">Struktur Template:</p>
                     <p id="infoTemplateDetail">Memuat...</p>
                 </div>
             </div>
@@ -118,16 +120,16 @@
                     <input type="text" id="editNamaTemplate" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl px-3 py-2">
                 </div>
 
-                <!-- Editor Kolom & Baris -->
+                <!-- Editor Baris & Kolom -->
                 <div class="space-y-3">
                     <div class="flex justify-between items-center">
-                        <label class="text-xs font-medium text-slate-300 uppercase">Atur Kolom & Pola Nilai Baris</label>
-                        <button onclick="tambahKolomBaris()" class="text-xs bg-indigo-600 hover:bg-indigo-500 text-white px-2.5 py-1.5 rounded-lg">+ Tambah Baris/Kolom</button>
+                        <label class="text-xs font-medium text-slate-300 uppercase">Atur Baris & Kolom Template</label>
+                        <button onclick="tambahBarisTemplate()" class="text-xs bg-indigo-600 hover:bg-indigo-500 text-white px-2.5 py-1.5 rounded-lg">+ Tambah Baris</button>
                     </div>
                     <div id="kolomContainer" class="space-y-2 max-h-48 overflow-y-auto pr-1">
                         <!-- Dynamic Row Config -->
                     </div>
-                    <p class="text-[11px] text-slate-400 italic">Tips: Gunakan keyword <code class="text-indigo-400">{kata}</code> di nilai kolom, maka otomatis akan diganti dengan input kata Anda.</p>
+                    <p class="text-[11px] text-slate-400 italic">Catatan: Kolom ke-2 akan otomatis diisi dengan Kata Utama yang Anda ketik di menu utama.</p>
                 </div>
             </div>
 
@@ -153,32 +155,31 @@
             setTimeout(() => onboarding.style.display = 'none', 300);
         }
 
-        // Default Templates jika belum ada di localStorage
         const defaultTemplates = [
             {
                 id: "tmpl_1",
                 nama: "Template 1: Variasi Kode",
                 rows: [
-                    { kolom: "Kategori", nilai: "Variasi Awal" },
-                    { kolom: "Kode Hasil", nilai: "{kata}1" },
-                    { kolom: "Keterangan", nilai: "Varian pertama dari {kata}" }
+                    { col1: "Item Awal", col3: "Deskripsi 1", col4: "Aktif" },
+                    { col1: "Item Tengah", col3: "Deskripsi 2", col4: "Pending" },
+                    { col1: "Item Akhir", col3: "Deskripsi 3", col4: "Selesai" }
                 ]
             },
             {
                 id: "tmpl_2",
-                nama: "Template 2: Workflow Tahapan",
+                nama: "Template 2: Workflow Standar",
                 rows: [
-                    { kolom: "Tahap", nilai: "Inisialisasi {kata}" },
-                    { kolom: "Status", nilai: "Ready" }
+                    { col1: "Tahap 1", col3: "Setup awal", col4: "Draft" },
+                    { col1: "Tahap 2", col3: "Eksekusi", col4: "Proses" }
                 ]
             }
         ];
 
-        let templates = JSON.parse(localStorage.getItem('saved_templates_ju')) || defaultTemplates;
+        let templates = JSON.parse(localStorage.getItem('saved_templates_ju_v2')) || defaultTemplates;
         let cachedExcelData = [];
 
         function simpanKeStorage() {
-            localStorage.setItem('saved_templates_ju', JSON.stringify(templates));
+            localStorage.setItem('saved_templates_ju_v2', JSON.stringify(templates));
         }
 
         function initDropdowns() {
@@ -203,8 +204,7 @@
             const currentId = document.getElementById('templateChoice').value;
             const t = templates.find(x => x.id === currentId);
             if (!t) return;
-            let info = t.rows.map(r => `• ${r.kolom}`).join(', ');
-            document.getElementById('infoTemplateDetail').innerText = info || "Belum ada kolom.";
+            document.getElementById('infoTemplateDetail').innerText = `Total Baris Pengaturan: ${t.rows.length} baris (Kolom ke-2 diisi Input Kata).`;
         }
 
         function getDataBaris() {
@@ -214,17 +214,13 @@
 
             if (!inputKata || !t || t.rows.length === 0) return [];
 
-            // Generate beberapa baris simulasi berdasarkan baris template
-            return t.rows.map((r, idx) => {
-                let formattedNilai = r.nilai.replace(/{kata}/g, inputKata);
-                let formattedKolom = r.kolom.replace(/{kata}/g, inputKata);
-                return {
-                    "No": idx + 1,
-                    "Nama Kolom": formattedKolom,
-                    "Nilai / Output": formattedNilai,
-                    "Input Utama": inputKata
-                };
-            });
+            return t.rows.map((r, idx) => ({
+                "No": idx + 1,
+                "Kolom 1 (Template)": r.col1,
+                "Kolom 2 (Input Kata)": inputKata,
+                "Kolom 3 (Template)": r.col3,
+                "Kolom 4 (Template)": r.col4
+            }));
         }
 
         function updatePreview() {
@@ -248,9 +244,10 @@
             previewHead.innerHTML = `
                 <tr>
                     <th class="p-3">No</th>
-                    <th class="p-3">Nama Kolom</th>
-                    <th class="p-3">Nilai / Output</th>
-                    <th class="p-3">Input Utama</th>
+                    <th class="p-3">Kolom 1</th>
+                    <th class="p-3 text-indigo-400">Kolom 2 (Input)</th>
+                    <th class="p-3">Kolom 3</th>
+                    <th class="p-3">Kolom 4</th>
                 </tr>
             `;
 
@@ -259,9 +256,10 @@
                 html += `
                     <tr class="hover:bg-slate-800/50 transition">
                         <td class="p-3 text-slate-400">${item["No"]}</td>
-                        <td class="p-3 font-semibold text-white">${item["Nama Kolom"]}</td>
-                        <td class="p-3 text-indigo-400 font-mono">${item["Nilai / Output"]}</td>
-                        <td class="p-3 text-slate-300">${item["Input Utama"]}</td>
+                        <td class="p-3 text-slate-300">${item["Kolom 1 (Template)"]}</td>
+                        <td class="p-3 font-semibold text-white bg-indigo-950/40">${item["Kolom 2 (Input Kata)"]}</td>
+                        <td class="p-3 text-slate-300">${item["Kolom 3 (Template)"]}</td>
+                        <td class="p-3 text-slate-300">${item["Kolom 4 (Template)"]}</td>
                     </tr>
                 `;
             });
@@ -281,7 +279,7 @@
 
             const worksheet = XLSX.utils.json_to_sheet(cachedExcelData);
             const workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, "Advanced Export");
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Generated Data");
 
             XLSX.writeFile(workbook, `export_${inputKata}_${t ? t.nama.replace(/\s+/g, '_') : 'custom'}.xlsx`);
 
@@ -289,7 +287,6 @@
             statusMsg.innerText = `Sukses! File Excel berhasil diunduh.`;
         }
 
-        // Modal Management
         function bukaModalTemplate() {
             document.getElementById('templateModal').classList.remove('hidden');
             loadTemplateToModal();
@@ -306,36 +303,44 @@
             if (!t) return;
 
             document.getElementById('editNamaTemplate').value = t.nama;
-            renderKolomEditor(t.rows);
+            renderEditorBaris(t.rows);
         }
 
-        function renderKolomEditor(rows) {
+        function renderEditorBaris(rows) {
             const container = document.getElementById('kolomContainer');
             container.innerHTML = '';
             rows.forEach((r, idx) => {
                 container.innerHTML += `
-                    <div class="flex gap-2 items-center bg-slate-900/60 p-2 rounded-xl border border-slate-700">
-                        <input type="text" value="${r.kolom}" placeholder="Nama Kolom" class="flex-1 bg-slate-800 text-xs text-slate-200 px-2.5 py-1.5 rounded-lg border border-slate-700 col-nama" />
-                        <input type="text" value="${r.nilai}" placeholder="Nilai ({kata}1)" class="flex-1 bg-slate-800 text-xs text-slate-200 px-2.5 py-1.5 rounded-lg border border-slate-700 col-nilai" />
-                        <button onclick="hapusBarisKolom(this)" class="text-rose-400 hover:text-rose-300 font-bold px-2">&times;</button>
+                    <div class="grid grid-cols-4 gap-2 items-center bg-slate-900/60 p-2 rounded-xl border border-slate-700">
+                        <input type="text" value="${r.col1}" placeholder="Kolom 1" class="bg-slate-800 text-xs text-slate-200 px-2 py-1.5 rounded-lg border border-slate-700 ed-col1" />
+                        <div class="bg-indigo-950/60 text-[11px] text-indigo-300 text-center py-1.5 rounded-lg border border-indigo-500/30 font-mono">⚡ [Input Kata]</div>
+                        <input type="text" value="${r.col3}" placeholder="Kolom 3" class="bg-slate-800 text-xs text-slate-200 px-2 py-1.5 rounded-lg border border-slate-700 ed-col3" />
+                        <div class="flex gap-1">
+                            <input type="text" value="${r.col4}" placeholder="Kolom 4" class="flex-1 bg-slate-800 text-xs text-slate-200 px-2 py-1.5 rounded-lg border border-slate-700 ed-col4" />
+                            <button onclick="hapusBarisEditor(this)" class="text-rose-400 hover:text-rose-300 font-bold px-1.5">&times;</button>
+                        </div>
                     </div>
                 `;
             });
         }
 
-        function tambahKolomBaris() {
+        function tambahBarisTemplate() {
             const container = document.getElementById('kolomContainer');
             container.innerHTML += `
-                <div class="flex gap-2 items-center bg-slate-900/60 p-2 rounded-xl border border-slate-700">
-                    <input type="text" placeholder="Nama Kolom Baru" class="flex-1 bg-slate-800 text-xs text-slate-200 px-2.5 py-1.5 rounded-lg border border-slate-700 col-nama" />
-                    <input type="text" placeholder="Nilai ({kata})" class="flex-1 bg-slate-800 text-xs text-slate-200 px-2.5 py-1.5 rounded-lg border border-slate-700 col-nilai" />
-                    <button onclick="hapusBarisKolom(this)" class="text-rose-400 hover:text-rose-300 font-bold px-2">&times;</button>
+                <div class="grid grid-cols-4 gap-2 items-center bg-slate-900/60 p-2 rounded-xl border border-slate-700">
+                    <input type="text" placeholder="Kolom 1" class="bg-slate-800 text-xs text-slate-200 px-2 py-1.5 rounded-lg border border-slate-700 ed-col1" />
+                    <div class="bg-indigo-950/60 text-[11px] text-indigo-300 text-center py-1.5 rounded-lg border border-indigo-500/30 font-mono">⚡ [Input Kata]</div>
+                    <input type="text" placeholder="Kolom 3" class="bg-slate-800 text-xs text-slate-200 px-2 py-1.5 rounded-lg border border-slate-700 ed-col3" />
+                    <div class="flex gap-1">
+                        <input type="text" placeholder="Kolom 4" class="flex-1 bg-slate-800 text-xs text-slate-200 px-2 py-1.5 rounded-lg border border-slate-700 ed-col4" />
+                        <button onclick="hapusBarisEditor(this)" class="text-rose-400 hover:text-rose-300 font-bold px-1.5">&times;</button>
+                    </div>
                 </div>
             `;
         }
 
-        function hapusBarisKolom(btn) {
-            btn.closest('div').remove();
+        function hapusBarisEditor(btn) {
+            btn.closest('div.grid').remove();
         }
 
         function buatTemplateBaru() {
@@ -343,7 +348,7 @@
             templates.push({
                 id: newId,
                 nama: "Template Baru",
-                rows: [{ kolom: "Kolom 1", nilai: "{kata}-test" }]
+                rows: [{ col1: "Data 1", col3: "Data 3", col4: "Data 4" }]
             });
             initDropdowns();
             document.getElementById('modalTemplateSelect').value = newId;
@@ -358,13 +363,12 @@
             t.nama = document.getElementById('editNamaTemplate').value.trim() || "Tanpa Nama";
             
             let newRows = [];
-            const rowElements = document.querySelectorAll('#kolomContainer > div');
+            const rowElements = document.querySelectorAll('#kolomContainer > div.grid');
             rowElements.forEach(div => {
-                const kolom = div.querySelector('.col-nama').value.trim();
-                const nilai = div.querySelector('.col-nilai').value.trim();
-                if (kolom) {
-                    newRows.push({ kolom, nilai });
-                }
+                const col1 = div.querySelector('.ed-col1').value.trim();
+                const col3 = div.querySelector('.ed-col3').value.trim();
+                const col4 = div.querySelector('.ed-col4').value.trim();
+                newRows.push({ col1, col3, col4 });
             });
             t.rows = newRows;
 
@@ -385,7 +389,6 @@
             tutupModalTemplate();
         }
 
-        // Jalankan saat pertama load
         initDropdowns();
     </script>
 </body>
