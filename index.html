@@ -12,10 +12,18 @@
         .dragging { opacity: 0.4; background: rgba(99, 102, 241, 0.2); }
     </style>
 </head>
-<body class="bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-950 min-h-screen text-slate-100 flex flex-col justify-between p-4 sm:p-6">
+<body class="bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-950 min-h-screen text-slate-100 flex flex-col justify-between p-4 sm:p-6 relative">
+
+    <!-- Tombol Lock di Kanan Atas -->
+    <button onclick="kunciAplikasi()" title="Kunci Aplikasi" class="absolute top-4 right-4 sm:top-6 sm:right-6 bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white p-2.5 rounded-xl border border-slate-700 shadow-lg transition duration-200 flex items-center gap-2 text-xs font-medium z-40">
+        <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+        </svg>
+        <span class="hidden sm:inline">Kunci</span>
+    </button>
 
     <!-- Halaman Onboarding dengan Proteksi Password -->
-    <div id="onboardingScreen" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 transition-opacity duration-300">
+    <div id="onboardingScreen" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-center justify-center p-4 transition-opacity duration-300">
         <div class="bg-slate-800 border border-slate-700/80 rounded-3xl p-8 max-w-md w-full text-center shadow-2xl space-y-5">
             <div class="w-16 h-16 bg-indigo-500/10 border border-indigo-500/20 rounded-2xl mx-auto flex items-center justify-center text-3xl shadow-inner">
                 🚀
@@ -39,7 +47,7 @@
     </div>
 
     <!-- Header -->
-    <header class="max-w-6xl mx-auto w-full text-center py-4">
+    <header class="max-w-6xl mx-auto w-full text-center py-4 pr-12 sm:pr-0">
         <span class="bg-indigo-500/10 text-indigo-400 text-xs font-semibold px-3 py-1 rounded-full border border-indigo-500/20 uppercase tracking-wider">Advanced Edition</span>
         <h1 class="text-3xl sm:text-4xl font-bold tracking-tight mt-3 text-white">Excel Template & Column Builder</h1>
         <p class="text-slate-400 text-sm mt-1">Multi-kata spasi otomatis jadi baris incremental berurutan.</p>
@@ -180,7 +188,9 @@
             if (passInput === "D@vincicode6969") {
                 errorMsg.classList.add('hidden');
                 onboarding.classList.add('opacity-0');
-                setTimeout(() => onboarding.style.display = 'none', 300);
+                setTimeout(() => {
+                    onboarding.style.display = 'none';
+                }, 300);
             } else {
                 errorMsg.classList.remove('hidden');
                 document.getElementById('inputPassword').focus();
@@ -191,6 +201,21 @@
             if (event.key === 'Enter') {
                 verifikasiPassword();
             }
+        }
+
+        // Fungsi untuk mengunci kembali aplikasi dan menampilkan onboarding
+        function kunciAplikasi() {
+            const onboarding = document.getElementById('onboardingScreen');
+            const passInput = document.getElementById('inputPassword');
+            const errorMsg = document.getElementById('errorPasswordMsg');
+
+            passInput.value = ''; // Kosongkan input password
+            errorMsg.classList.add('hidden'); // Sembunyikan pesan error jika ada
+            onboarding.style.display = 'flex';
+            setTimeout(() => {
+                onboarding.classList.remove('opacity-0');
+            }, 10);
+            passInput.focus();
         }
 
         const defaultTemplates = [
@@ -385,7 +410,7 @@
                             <input type="radio" name="inputColRadio" ${checkedAttr} onchange="updateInputColRadio(${idx})" class="accent-indigo-500" />
                             <span>Input</span>
                         </label>
-                        <button onclick="hapusKolomHeader(this)" class="text-rose-400 font-bold hover:text-rose-300 px-1">&times;</button>
+                        <button type="button" onclick="hapusKolomHeader(this)" class="text-rose-400 font-bold hover:text-rose-300 px-1">&times;</button>
                     </div>
                 `;
             });
@@ -412,7 +437,7 @@
                         <input type="radio" name="inputColRadio" ${isFirst ? 'checked' : ''} onchange="updateInputColRadio(${totalCols})" class="accent-indigo-500" />
                         <span>Input</span>
                     </label>
-                    <button onclick="hapusKolomHeader(this)" class="text-rose-400 font-bold hover:text-rose-300 px-1">&times;</button>
+                    <button type="button" onclick="hapusKolomHeader(this)" class="text-rose-400 font-bold hover:text-rose-300 px-1">&times;</button>
                 </div>
             `;
             syncRowsToCurrentColumns();
@@ -459,7 +484,7 @@
                     let val = rowVals[i] || "";
                     rowHtml += `<input type="text" value="${val}" placeholder="Nilai Template" class="flex-1 bg-slate-800 text-xs text-slate-200 px-2.5 py-1.5 rounded-lg border border-slate-700 row-val-input" />`;
                 }
-                rowHtml += `<button onclick="hapusBarisEditor(this)" class="text-rose-400 hover:text-rose-300 font-bold px-2">&times;</button></div>`;
+                rowHtml += `<button type="button" onclick="hapusBarisEditor(this)" class="text-rose-400 hover:text-rose-300 font-bold px-2">&times;</button></div>`;
                 container.innerHTML += rowHtml;
             });
             initDragAndDrop();
@@ -488,7 +513,7 @@
             for(let i=0; i<nonInputColsCount; i++) {
                 rowHtml += `<input type="text" placeholder="Nilai Template" class="flex-1 bg-slate-800 text-xs text-slate-200 px-2.5 py-1.5 rounded-lg border border-slate-700 row-val-input" />`;
             }
-            rowHtml += `<button onclick="hapusBarisEditor(this)" class="text-rose-400 hover:text-rose-300 font-bold px-2">&times;</button></div>`;
+            rowHtml += `<button type="button" onclick="hapusBarisEditor(this)" class="text-rose-400 hover:text-rose-300 font-bold px-2">&times;</button></div>`;
             container.innerHTML += rowHtml;
             initDragAndDrop();
         }
