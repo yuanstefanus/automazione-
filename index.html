@@ -48,9 +48,9 @@
 
     <!-- Header -->
     <header class="max-w-6xl mx-auto w-full text-center py-4 pr-12 sm:pr-0">
-        <span class="bg-indigo-500/10 text-indigo-400 text-xs font-semibold px-3 py-1 rounded-full border border-indigo-500/20 uppercase tracking-wider">Advanced Edition</span>
-        <h1 class="text-3xl sm:text-4xl font-bold tracking-tight mt-3 text-white">Excel Template & Column Builder</h1>
-        <p class="text-slate-400 text-sm mt-1">Multi-kata spasi otomatis jadi baris incremental berurutan.</p>
+        <span class="bg-indigo-500/10 text-indigo-400 text-xs font-semibold px-3 py-1 rounded-full border border-indigo-500/20 uppercase tracking-wider">V1.0</span>
+        <h1 class="text-3xl sm:text-4xl font-bold tracking-tight mt-3 text-white">Material Configurations</h1>
+        <p class="text-slate-400 text-sm mt-1">New Ring, Swap, Modernization</p>
     </header>
 
     <!-- Main Container -->
@@ -60,13 +60,13 @@
         <div class="bg-slate-800/60 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-6 shadow-xl flex flex-col justify-between space-y-6">
             <div class="space-y-4">
                 <h2 class="text-lg font-semibold text-white border-b border-slate-700 pb-3 flex items-center justify-between">
-                    <span>Konfigurasi</span>
+                    <span>Configure</span>
                     <button onclick="bukaModalTemplate()" class="text-xs bg-indigo-600/40 hover:bg-indigo-600 text-indigo-300 hover:text-white px-2.5 py-1 rounded-lg border border-indigo-500/30 transition">+ Edit Template</button>
                 </h2>
 
                 <!-- Pilih Template -->
                 <div>
-                    <label class="block text-xs font-medium text-slate-300 uppercase tracking-wider mb-2">Pilih Template Aktif</label>
+                    <label class="block text-xs font-medium text-slate-300 uppercase tracking-wider mb-2">Select Template</label>
                     <select id="templateChoice" onchange="gantiTemplate()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition">
                         <!-- Dynamic Options -->
                     </select>
@@ -74,15 +74,15 @@
 
                 <!-- Input Kata -->
                 <div>
-                    <label class="block text-xs font-medium text-slate-300 uppercase tracking-wider mb-2" id="inputLabelTitle">Kata / Kode Utama (Pisah dengan spasi)</label>
+                    <label class="block text-xs font-medium text-slate-300 uppercase tracking-wider mb-2" id="inputLabelTitle">DUID</label>
                     <textarea rows="2" id="inputKata" oninput="updatePreview()" placeholder="Contoh: ItemA ItemB ItemC" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl p-3 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition resize-none"></textarea>
-                    <p class="text-[10px] text-slate-400 mt-1">Setiap kata yang dipisah spasi akan men-generate ulang seluruh baris template secara berurutan.</p>
+                    <p class="text-[10px] text-slate-400 mt-1">Try to input bulky hihi</p>
                 </div>
 
                 <!-- Info Template Aktif -->
                 <div class="bg-slate-900/40 border border-slate-700/40 rounded-xl p-3 text-xs text-slate-400 space-y-1">
                     <p class="font-semibold text-slate-300">Struktur Template:</p>
-                    <p id="infoTemplateDetail">Memuat...</p>
+                    <p id="infoTemplateDetail">Loading...</p>
                 </div>
             </div>
 
@@ -96,8 +96,8 @@
         <!-- Panel Preview (Kanan) -->
         <div class="lg:col-span-2 bg-slate-800/60 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-6 shadow-xl flex flex-col">
             <div class="flex items-center justify-between border-b border-slate-700 pb-3 mb-4">
-                <h2 class="text-lg font-semibold text-white flex items-center gap-2">Pratinjau Hasil Data</h2>
-                <span id="rowCountBadge" class="text-xs bg-slate-700 text-slate-300 px-2.5 py-1 rounded-full font-medium">0 Baris</span>
+                <h2 class="text-lg font-semibold text-white flex items-center gap-2">Review Output</h2>
+                <span id="rowCountBadge" class="text-xs bg-slate-700 text-slate-300 px-2.5 py-1 rounded-full font-medium">0 Line</span>
             </div>
 
             <!-- Tabel Preview -->
@@ -107,7 +107,7 @@
                         <!-- Dynamic Headers -->
                     </thead>
                     <tbody id="previewBody" class="text-slate-300 divide-y divide-slate-800">
-                        <tr><td class="p-8 text-center text-slate-500 italic">Masukkan kata di panel sebelah kiri untuk melihat pratinjau...</td></tr>
+                        <tr><td class="p-8 text-center text-slate-500 italic">Enter DUID and generate...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -136,7 +136,7 @@
                 </div>
 
                 <div class="space-y-2">
-                    <label class="block text-xs font-medium text-slate-300 uppercase">Nama Template</label>
+                    <label class="block text-xs font-medium text-slate-300 uppercase">Template Name</label>
                     <input type="text" id="editNamaTemplate" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl px-3 py-2">
                 </div>
 
@@ -325,7 +325,7 @@
             if (!rawInput || !t || cachedExcelData.length === 0) {
                 previewHead.innerHTML = `<tr><th class="p-3">Info</th></tr>`;
                 previewBody.innerHTML = `<tr><td class="p-8 text-center text-slate-500 italic">Masukkan kata dipisah spasi di panel sebelah kiri...</td></tr>`;
-                rowCountBadge.innerText = "0 Baris";
+                rowCountBadge.innerText = "0 Line";
                 downloadBtn.className = "w-full bg-indigo-600/50 text-slate-400 font-medium py-3 rounded-xl transition duration-200 shadow-lg cursor-not-allowed flex items-center justify-center gap-2 text-sm";
                 downloadBtn.disabled = true;
                 return;
