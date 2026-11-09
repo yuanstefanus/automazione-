@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome, Ju - Advanced Excel Generator</title>
+    <title>Welcome, Ju - You One v1.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -46,73 +46,154 @@
         </div>
     </div>
 
-    <!-- Header -->
-    <header class="max-w-6xl mx-auto w-full text-center py-4 pr-12 sm:pr-0">
-        <span class="bg-indigo-500/10 text-indigo-400 text-xs font-semibold px-3 py-1 rounded-full border border-indigo-500/20 uppercase tracking-wider">v1.0</span>
-        <h1 class="text-3xl sm:text-4xl font-bold tracking-tight mt-3 text-white">You One</h1>
-        <p class="text-slate-400 text-sm mt-1">hmmm, mau buat apa yah</p>
+    <!-- Header & Navbar Utama -->
+    <header class="max-w-6xl mx-auto w-full text-center py-4 pr-12 sm:pr-0 space-y-4">
+        <div>
+            <span class="bg-indigo-500/10 text-indigo-400 text-xs font-semibold px-3 py-1 rounded-full border border-indigo-500/20 uppercase tracking-wider">v1.0</span>
+            <h1 class="text-3xl sm:text-4xl font-bold tracking-tight mt-3 text-white">You One</h1>
+            <p class="text-slate-400 text-sm mt-1">hmmm, mau buat apa yah</p>
+        </div>
+
+        <!-- Navbar Menu -->
+        <nav class="flex justify-center items-center gap-2 bg-slate-800/80 backdrop-blur-md p-1.5 rounded-2xl border border-slate-700 max-w-xs mx-auto shadow-lg">
+            <button onclick="switchTab('configure')" id="navConfigure" class="flex-1 py-2 px-4 rounded-xl text-xs font-semibold transition bg-indigo-600 text-white shadow-md cursor-pointer">
+                Configure
+            </button>
+            <button onclick="switchTab('inventory')" id="navInventory" class="flex-1 py-2 px-4 rounded-xl text-xs font-semibold transition text-slate-400 hover:text-white cursor-pointer">
+                Inventory Data
+            </button>
+        </nav>
     </header>
 
     <!-- Main Container -->
-    <main class="max-w-6xl mx-auto w-full grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+    <main class="max-w-6xl mx-auto w-full mb-8">
         
-        <!-- Panel Kontrol (Kiri) -->
-        <div class="bg-slate-800/60 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-6 shadow-xl flex flex-col justify-between space-y-6">
-            <div class="space-y-4">
-                <h2 class="text-lg font-semibold text-white border-b border-slate-700 pb-3 flex items-center justify-between">
-                    <span>Configure</span>
-                    <button onclick="bukaModalTemplate()" class="text-xs bg-indigo-600/40 hover:bg-indigo-600 text-indigo-300 hover:text-white px-2.5 py-1 rounded-lg border border-indigo-500/30 transition">+ Edit Template</button>
-                </h2>
+        <!-- SECTION 1: CONFIGURE (Halaman Generator Excel Lama) -->
+        <div id="sectionConfigure" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Panel Kontrol (Kiri) -->
+            <div class="bg-slate-800/60 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-6 shadow-xl flex flex-col justify-between space-y-6">
+                <div class="space-y-4">
+                    <h2 class="text-lg font-semibold text-white border-b border-slate-700 pb-3 flex items-center justify-between">
+                        <span>Configure</span>
+                        <button onclick="bukaModalTemplate()" class="text-xs bg-indigo-600/40 hover:bg-indigo-600 text-indigo-300 hover:text-white px-2.5 py-1 rounded-lg border border-indigo-500/30 transition">+ Edit Template</button>
+                    </h2>
 
-                <!-- Pilih Template -->
-                <div>
-                    <label class="block text-xs font-medium text-slate-300 uppercase tracking-wider mb-2">Pilih Template Aktif</label>
-                    <select id="templateChoice" onchange="gantiTemplate()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition">
-                        <!-- Dynamic Options -->
-                    </select>
+                    <!-- Pilih Template -->
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 uppercase tracking-wider mb-2">Pilih Template Aktif</label>
+                        <select id="templateChoice" onchange="gantiTemplate()" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition">
+                            <!-- Dynamic Options -->
+                        </select>
+                    </div>
+
+                    <!-- Input Kata -->
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 uppercase tracking-wider mb-2" id="inputLabelTitle">Kata / Kode Utama (Pisah dengan spasi)</label>
+                        <textarea rows="2" id="inputKata" oninput="handleInputWithRedundancyCheck()" placeholder="Contoh: ItemA ItemB ItemC" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl p-3 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition resize-none"></textarea>
+                        <p class="text-[10px] text-slate-400 mt-1">Setiap kata yang dipisah spasi akan men-generate ulang seluruh baris template secara berurutan.</p>
+                    </div>
+
+                    <!-- Info Template Aktif -->
+                    <div class="bg-slate-900/40 border border-slate-700/40 rounded-xl p-3 text-xs text-slate-400 space-y-1">
+                        <p class="font-semibold text-slate-300">Struktur Template:</p>
+                        <p id="infoTemplateDetail">Memuat...</p>
+                    </div>
                 </div>
 
-                <!-- Input Kata -->
-                <div>
-                    <label class="block text-xs font-medium text-slate-300 uppercase tracking-wider mb-2" id="inputLabelTitle">Kata / Kode Utama (Pisah dengan spasi)</label>
-                    <textarea rows="2" id="inputKata" oninput="handleInputWithRedundancyCheck()" placeholder="Contoh: ItemA ItemB ItemC" class="w-full bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl p-3 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition resize-none"></textarea>
-                    <p class="text-[10px] text-slate-400 mt-1">Setiap kata yang dipisah spasi akan men-generate ulang seluruh baris template secara berurutan.</p>
-                </div>
-
-                <!-- Info Template Aktif -->
-                <div class="bg-slate-900/40 border border-slate-700/40 rounded-xl p-3 text-xs text-slate-400 space-y-1">
-                    <p class="font-semibold text-slate-300">Struktur Template:</p>
-                    <p id="infoTemplateDetail">Memuat...</p>
-                </div>
+                <!-- Tombol Aksi -->
+                <button onclick="downloadExcel()" id="downloadBtn" disabled class="w-full bg-indigo-600/50 text-slate-400 font-medium py-3 rounded-xl transition duration-200 shadow-lg cursor-not-allowed flex items-center justify-center gap-2 text-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                    Download Excel (.xlsx)
+                </button>
             </div>
 
-            <!-- Tombol Aksi -->
-            <button onclick="downloadExcel()" id="downloadBtn" disabled class="w-full bg-indigo-600/50 text-slate-400 font-medium py-3 rounded-xl transition duration-200 shadow-lg cursor-not-allowed flex items-center justify-center gap-2 text-sm">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-                Download Excel (.xlsx)
-            </button>
+            <!-- Panel Preview (Kanan) -->
+            <div class="lg:col-span-2 bg-slate-800/60 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-6 shadow-xl flex flex-col">
+                <div class="flex items-center justify-between border-b border-slate-700 pb-3 mb-4">
+                    <h2 class="text-lg font-semibold text-white flex items-center gap-2">Pratinjau Hasil Data</h2>
+                    <span id="rowCountBadge" class="text-xs bg-slate-700 text-slate-300 px-2.5 py-1 rounded-full font-medium">0 Baris</span>
+                </div>
+
+                <!-- Tabel Preview -->
+                <div class="flex-1 border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/50 max-h-80 overflow-y-auto">
+                    <table class="w-full text-left border-collapse text-sm">
+                        <thead id="previewHead" class="bg-slate-900/80 text-slate-400 text-xs uppercase sticky top-0 border-b border-slate-700">
+                            <!-- Dynamic Headers -->
+                        </thead>
+                        <tbody id="previewBody" class="text-slate-300 divide-y divide-slate-800">
+                            <tr><td class="p-8 text-center text-slate-500 italic">Masukkan kata di panel sebelah kiri untuk melihat pratinjau...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="statusMsg" class="mt-4 text-center text-xs font-medium"></div>
+            </div>
         </div>
 
-        <!-- Panel Preview (Kanan) -->
-        <div class="lg:col-span-2 bg-slate-800/60 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-6 shadow-xl flex flex-col">
-            <div class="flex items-center justify-between border-b border-slate-700 pb-3 mb-4">
-                <h2 class="text-lg font-semibold text-white flex items-center gap-2">Pratinjau Hasil Data</h2>
-                <span id="rowCountBadge" class="text-xs bg-slate-700 text-slate-300 px-2.5 py-1 rounded-full font-medium">0 Baris</span>
+        <!-- SECTION 2: INVENTORY DATA & DASHBOARD (Baru) -->
+        <div id="sectionInventory" class="hidden space-y-6">
+            <div class="bg-slate-800/60 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-6 shadow-xl space-y-5 max-w-2xl mx-auto">
+                <div class="border-b border-slate-700 pb-3">
+                    <h2 class="text-lg font-semibold text-white">Upload File Inventory Data</h2>
+                    <p class="text-slate-400 text-xs mt-0.5">Pilih file Excel (.xlsx, .xls) atau CSV untuk dianalisis dan digenerate menjadi dashboard.</p>
+                </div>
+
+                <!-- Area Input File -->
+                <div class="space-y-3">
+                    <label class="block text-xs font-medium text-slate-300 uppercase tracking-wider">Pilih File Inventory</label>
+                    <div class="border-2 border-dashed border-slate-700 hover:border-indigo-500/60 rounded-2xl p-6 text-center bg-slate-900/40 transition cursor-pointer relative">
+                        <input type="file" id="inventoryFileInput" accept=".xlsx, .xls, .csv" onchange="handleFileSelect(event)" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full">
+                        <div class="space-y-2 pointer-events-none">
+                            <span class="text-3xl">📊</span>
+                            <p id="fileLabelName" class="text-sm font-medium text-slate-300">Klik untuk browse atau seret file ke sini</p>
+                            <p class="text-[10px] text-slate-500">Mendukung format spreadsheet standar</p>
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="generateInventoryDashboard()" id="generateDashboardBtn" disabled class="w-full bg-indigo-600/50 text-slate-400 font-medium py-3 rounded-xl transition duration-200 shadow-lg cursor-not-allowed flex items-center justify-center gap-2 text-sm">
+                    🚀 Generate Dashboard
+                </button>
             </div>
 
-            <!-- Tabel Preview -->
-            <div class="flex-1 border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/50 max-h-80 overflow-y-auto">
-                <table class="w-full text-left border-collapse text-sm">
-                    <thead id="previewHead" class="bg-slate-900/80 text-slate-400 text-xs uppercase sticky top-0 border-b border-slate-700">
-                        <!-- Dynamic Headers -->
-                    </thead>
-                    <tbody id="previewBody" class="text-slate-300 divide-y divide-slate-800">
-                        <tr><td class="p-8 text-center text-slate-500 italic">Masukkan kata di panel sebelah kiri untuk melihat pratinjau...</td></tr>
-                    </tbody>
-                </table>
-            </div>
+            <!-- Dashboard Result Container (Hidden sebelum digenerate) -->
+            <div id="inventoryDashboardContainer" class="hidden space-y-6">
+                <div class="flex items-center justify-between border-b border-slate-700 pb-3">
+                    <h3 class="text-xl font-bold text-white flex items-center gap-2">📈 Ringkasan Dashboard Inventory</h3>
+                    <span id="totalRowsInventoryBadge" class="text-xs bg-indigo-900/60 text-indigo-300 border border-indigo-500/30 px-3 py-1 rounded-full font-medium">0 Data Tercatat</span>
+                </div>
 
-            <div id="statusMsg" class="mt-4 text-center text-xs font-medium"></div>
+                <!-- Widget Kartu Statistik -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="bg-slate-800/60 border border-slate-700/50 rounded-2xl p-5 shadow-lg space-y-1">
+                        <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Total Baris / Item</p>
+                        <h4 id="statTotalItems" class="text-2xl font-bold text-white">0</h4>
+                    </div>
+                    <div class="bg-slate-800/60 border border-slate-700/50 rounded-2xl p-5 shadow-lg space-y-1">
+                        <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Kolom Terdeteksi</p>
+                        <h4 id="statTotalColumns" class="text-2xl font-bold text-indigo-400">0</h4>
+                    </div>
+                    <div class="bg-slate-800/60 border border-slate-700/50 rounded-2xl p-5 shadow-lg space-y-1">
+                        <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Status Analisis</p>
+                        <h4 class="text-lg font-semibold text-emerald-400 flex items-center gap-1.5">✅ Berhasil Dimuat</h4>
+                    </div>
+                </div>
+
+                <!-- Tabel Pratinjau Data Inventory -->
+                <div class="bg-slate-800/60 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-6 shadow-xl space-y-4">
+                    <h4 class="text-md font-semibold text-white">Pratinjau Data Inventory</h4>
+                    <div class="border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/50 max-h-96 overflow-y-auto">
+                        <table class="w-full text-left border-collapse text-sm">
+                            <thead id="inventoryTableHead" class="bg-slate-900/80 text-slate-400 text-xs uppercase sticky top-0 border-b border-slate-700">
+                                <!-- Dynamic Inventory Headers -->
+                            </thead>
+                            <tbody id="inventoryTableBody" class="text-slate-300 divide-y divide-slate-800">
+                                <!-- Dynamic Inventory Rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
 
     </main>
@@ -254,6 +335,97 @@
                 onboarding.classList.remove('opacity-0');
             }, 10);
             passInput.focus();
+        }
+
+        // Fungsi Switch Tab Navbar (Configure vs Inventory Data)
+        function switchTab(tabName) {
+            const secConfigure = document.getElementById('sectionConfigure');
+            const secInventory = document.getElementById('sectionInventory');
+            const navConfigure = document.getElementById('navConfigure');
+            const navInventory = document.getElementById('navInventory');
+
+            if (tabName === 'configure') {
+                secConfigure.classList.remove('hidden');
+                secInventory.classList.add('hidden');
+                navConfigure.className = "flex-1 py-2 px-4 rounded-xl text-xs font-semibold transition bg-indigo-600 text-white shadow-md cursor-pointer";
+                navInventory.className = "flex-1 py-2 px-4 rounded-xl text-xs font-semibold transition text-slate-400 hover:text-white cursor-pointer";
+            } else {
+                secConfigure.classList.add('hidden');
+                secInventory.classList.remove('hidden');
+                navInventory.className = "flex-1 py-2 px-4 rounded-xl text-xs font-semibold transition bg-indigo-600 text-white shadow-md cursor-pointer";
+                navConfigure.className = "flex-1 py-2 px-4 rounded-xl text-xs font-semibold transition text-slate-400 hover:text-white cursor-pointer";
+            }
+        }
+
+        // Variabel untuk Inventory Data & Dashboard
+        let parsedInventoryData = [];
+
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            const fileLabelName = document.getElementById('fileLabelName');
+            const generateBtn = document.getElementById('generateDashboardBtn');
+
+            if (!file) return;
+
+            fileLabelName.innerText = `📄 ${file.name}`;
+            generateBtn.disabled = false;
+            generateBtn.className = "w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3 rounded-xl transition duration-200 shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2 text-sm cursor-pointer";
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+                const firstSheetName = workbook.SheetNames[0];
+                const worksheet = workbook.Sheets[firstSheetName];
+                parsedInventoryData = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        function generateInventoryDashboard() {
+            if (parsedInventoryData.length === 0) {
+                alert("File kosong atau belum dipilih dengan benar!");
+                return;
+            }
+
+            const container = document.getElementById('inventoryDashboardContainer');
+            const tableHead = document.getElementById('inventoryTableHead');
+            const tableBody = document.getElementById('inventoryTableBody');
+            const statTotalItems = document.getElementById('statTotalItems');
+            const statTotalColumns = document.getElementById('statTotalColumns');
+            const totalRowsBadge = document.getElementById('totalRowsInventoryBadge');
+
+            container.classList.remove('hidden');
+
+            // Hitung statistik
+            statTotalItems.innerText = parsedInventoryData.length;
+            totalRowsBadge.innerText = `${parsedInventoryData.length} Data Tercatat`;
+
+            const columns = Object.keys(parsedInventoryData[0]);
+            statTotalColumns.innerText = columns.length;
+
+            // Render Header Tabel
+            let headHtml = "<tr><th class='p-3'>No.</th>";
+            columns.forEach(col => {
+                headHtml += `<th class="p-3">${col}</th>`;
+            });
+            headHtml += "</tr>";
+            tableHead.innerHTML = headHtml;
+
+            // Render Isi Baris Tabel (Maksimal 100 baris pertama untuk preview performa optimal)
+            let bodyHtml = "";
+            parsedInventoryData.slice(0, 100).forEach((row, idx) => {
+                bodyHtml += `<tr class="hover:bg-slate-800/50 transition">`;
+                bodyHtml += `<td class="p-3 text-slate-500">${idx + 1}</td>`;
+                columns.forEach(col => {
+                    bodyHtml += `<td class="p-3 text-slate-300">${row[col]}</td>`;
+                });
+                bodyHtml += `</tr>`;
+            });
+            tableBody.innerHTML = bodyHtml;
+
+            // Scroll otomatis ke bagian dashboard di bawahnya
+            container.scrollIntoView({ behavior: 'smooth' });
         }
 
         let userBypassedRedundancy = false;
